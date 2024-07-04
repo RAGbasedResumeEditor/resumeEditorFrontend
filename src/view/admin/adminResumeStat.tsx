@@ -33,7 +33,7 @@ const AdminResumeStat = () => {
 
   const fetchSquareData = async (group: string) => {
     let res = await axiosInstance
-      .get(`admin/stat/resume/count`, {
+      .get(`admin/statistics/resume/count`, {
         params: {
           group: group,
         },
@@ -58,7 +58,7 @@ const AdminResumeStat = () => {
 
   const fetchRankData = (group: string) => {
     let res = axiosInstance
-      .get(`admin/stat/rank/${group}`)
+      .get(`admin/statistics/rank/${group}`)
       .then((res) => {
         switch (group) {
           case "occupation":
@@ -76,7 +76,7 @@ const AdminResumeStat = () => {
 
   const fetchRatioData = (group: string) => {
     let res = axiosInstance
-      .get("admin/stat/resume-edit", {
+      .get("admin/statistics/resume-edit", {
         params: {
           group: group,
         },

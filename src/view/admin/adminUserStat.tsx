@@ -34,7 +34,7 @@ const AdminUserStat = () => {
 
   const fetchAdminStatData = async (group: string) => {
     let res = await axiosInstance
-      .get(`admin/stat/rank/${group}`)
+      .get(`admin/statistics/rank/${group}`)
       .then((res) => {
         switch (group) {
           case "occupation":
