@@ -19,7 +19,7 @@ const LandingStat = () => {
 
   const fetchLandingStatData = async (group: string) => {
     let res = await axios
-      .get("/landing/stat", {
+      .get("/landing/statistics", {
         params: {
           group: group,
         },

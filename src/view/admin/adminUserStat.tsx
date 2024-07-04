@@ -54,7 +54,7 @@ const AdminUserStat = () => {
   };
   const fetchUserStatData = async (group: string) => {
     let res = await axiosInstance
-      .get("/admin/stat/user", {
+      .get("/admin/stattistics/user", {
         params: {
           group: group,
         },
@@ -92,7 +92,7 @@ const AdminUserStat = () => {
   const fetchAccumulatedData = async (group: string) => {
     try {
       const res = await axiosInstance
-        .get(`/admin/stat/user/${group}`)
+        .get(`/admin/statistics/user/${group}`)
         .then((res) => {
           switch (group) {
             case "traffic":
@@ -133,7 +133,7 @@ const AdminUserStat = () => {
     if (selectedType == "월별") {
       const valueOfInput = range.format();
       const res = axiosInstance
-        .get("/admin/stat/user/traffic", {
+        .get("/admin/statistics/user/access", {
           params: {
             month: valueOfInput.slice(0, 10),
           },
@@ -142,7 +142,7 @@ const AdminUserStat = () => {
           setTrafficData(res.data.response.traffic_data);
         });
       const res2 = axiosInstance
-        .get("/admin/stat/user/signup", {
+        .get("/admin/statistics/user/signup", {
           params: {
             month: valueOfInput.slice(0, 10),
           },
@@ -154,7 +154,7 @@ const AdminUserStat = () => {
       const valueOfInput1 = range[0].format();
       const valueOfInput2 = range[1].format();
       const res = axiosInstance
-        .get("/admin/stat/user/traffic", {
+        .get("/admin/statistics/user/access", {
           params: {
             startDate: valueOfInput1.slice(0, 10),
             endDate: valueOfInput2.slice(0, 10),
@@ -164,7 +164,7 @@ const AdminUserStat = () => {
           setTrafficData(res.data.response.traffic_data);
         });
       const res2 = axiosInstance
-        .get("/admin/stat/user/signup", {
+        .get("/admin/statistics/user/signup", {
           params: {
             startDate: valueOfInput1.slice(0, 10),
             endDate: valueOfInput2.slice(0, 10),
