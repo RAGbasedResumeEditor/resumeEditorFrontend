@@ -28,7 +28,7 @@ const ResumeList = () => {
   async function fetchSearch(search: string) {
     let res = await axiosInstance.get("/board/list/search", {
       params: {
-        page: 0,
+        pageNo: 0,
         keyword: search,
       },
     });
@@ -39,7 +39,7 @@ const ResumeList = () => {
   async function fetchList(page: number) {
     let res = await axiosInstance.get("/board/list", {
       params: {
-        page: page - 1,
+        pageNo: page - 1,
       },
     });
     setResumeList(res.data.response);

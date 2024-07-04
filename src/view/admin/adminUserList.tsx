@@ -120,7 +120,7 @@ const AdminUserList = () => {
     let res = axiosInstance
       .get("/admin/user/search", {
         params: {
-          page: page,
+          pageNo: page,
           keyword: search,
           group: searchOption,
         },
@@ -159,7 +159,7 @@ const AdminUserList = () => {
     let res = axiosInstance
       .get("/admin/user/list", {
         params: {
-          page: page,
+          pageNo: page,
         },
       })
       .then((res) => {

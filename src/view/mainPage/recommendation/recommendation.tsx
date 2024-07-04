@@ -77,25 +77,25 @@ const Recommendation = () => {
         }
       })
       .catch((err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Network Error',
-          text: 'Failed to connect to the server. Please try again later.',
-        });
+        console.log(err);
       });
   }, []);
   
 
   const onFinish = ({ career, education, keyword, minPay, maxPay }) => {
+    keyword = "프론트엔드 개발"
+    minPay = parseInt(minPay);
+    maxPay = parseInt(maxPay);
+    let salTp = "Y";
+    console.log(career, education,keyword, typeof(minPay), maxPay, salTp);
     let res = axios
-      .get('https://resume-editor-python.vercel.app/job_search', {
-        params: {
-          career: career,
-          education: education,
-          keyword: keyword,
-          minPay: minPay,
-          maxPay: maxPay,
-        },
+      .post('https://resume-editor-python.vercel.app/job_search',{
+        career: "N",
+        education: "05",
+        minPay: 3700,
+        maxPay: 8000,
+        salTp: "Y",
+        keyword:"개발자"
       })
       .then((res) => {
         console.log(res);

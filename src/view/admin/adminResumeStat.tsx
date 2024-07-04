@@ -76,7 +76,7 @@ const AdminResumeStat = () => {
 
   const fetchRatioData = (group: string) => {
     let res = axiosInstance
-      .get("admin/stat/resumeEdit", {
+      .get("admin/stat/resume-edit", {
         params: {
           group: group,
         },

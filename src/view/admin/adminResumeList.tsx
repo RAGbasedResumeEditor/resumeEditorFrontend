@@ -45,7 +45,7 @@ const AdminResumeList = () => {
     let res = axiosInstance
       .get("/admin/board/list", {
         params: {
-          page: page,
+          pageNo: page,
         },
       })
       .then((res) => {
