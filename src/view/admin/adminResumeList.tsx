@@ -43,7 +43,7 @@ const AdminResumeList = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const fetchResumeList = (page: number) => {
     let res = axiosInstance
-      .get("/admin/board/list", {
+      .get("/admin/resume/board/list", {
         params: {
           pageNo: page,
         },
