@@ -33,6 +33,7 @@ const Recommendation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [certList, setCertList] = useState([{ value: '', iconType: 'plus' }]);
   const [awardList, setAwardList] = useState([{ value: '', iconType: 'plus' }]);
+  const [searchedOccupation, setSearchedOccupation] = useState([]);
   const [experienceList, setExperienceList] = useState([
     { value: '', iconType: 'plus' },
   ]);
@@ -81,24 +82,41 @@ const Recommendation = () => {
       });
   }, []);
   
-
-  const onFinish = ({ career, education, keyword, minPay, maxPay }) => {
-    keyword = "프론트엔드 개발"
+  // {
+  //   key: "1",
+  //   회사명: "컬티스 주식회사",
+  //   체용제목: "설계팀 사원 모집",
+  //   임금형태: "연봉",
+  //   급여: "3200만원 ~ 3400만원",
+  //   근무지역: "경기 화성시",
+  //   근무형태: "주5일근무",
+  //   최소학력: "대졸(2~3년)",
+  //   경력: "신입",
+  //   등록일자: "24-06-13",
+  //   직종코드: "159103",
+  // },
+  const onFinish = ({ career, education, occupation, minPay, maxPay }) => {
     minPay = parseInt(minPay);
     maxPay = parseInt(maxPay);
     let salTp = "Y";
-    console.log(career, education,keyword, typeof(minPay), maxPay, salTp);
     let res = axios
       .post('https://resume-editor-python.vercel.app/job_search',{
-        career: "N",
-        education: "05",
-        minPay: 3700,
-        maxPay: 8000,
-        salTp: "Y",
-        keyword:"개발자"
+        career: career,
+        education: education,
+        minPay: minPay,
+        maxPay: maxPay,
+        salTp: salTp,
+        keyword: occupation
       })
       .then((res) => {
-        console.log(res);
+        
+        let newData = res.data.result.map((data, index) => ({
+          ...data,
+          "급여": data["급여"].slice(0,6),
+          key: `occupation${index}`
+        }));
+        console.log(newData);
+        setSearchedOccupation(newData);
       });
     setGenerated(true);
   };
@@ -178,18 +196,6 @@ const Recommendation = () => {
       key: 'occupation',
     },
   ];
-  const columns = [
-    {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
-    },
-    {
-      title: 'Items',
-      dataIndex: 'items',
-      key: 'items',
-    },
-  ];
   return (
     <div>
       <div className="recommendationWrapper" style={{ padding: '2%', display: 'flex' }}>
@@ -219,7 +225,7 @@ const Recommendation = () => {
                 }}
               />
             </Tooltip>
-            <Form layout={'vertical'} form={userInputForm} onFinish={onFinish}>
+            <Form layout={'vertical'} form={userInputForm} onFinish={onFinish} initialValues={{["education"]:"00"}}>
               <Form.Item
                 name="career"
                 label={<b>경력</b>}
@@ -229,12 +235,12 @@ const Recommendation = () => {
                 }}
               >
                 <Radio.Group>
-                  <Radio value="N"> 신입 </Radio>
+                  <Radio value="N"> 신입 </Radio> 
                   <Radio value="E"> 경력 </Radio>
                   <Radio value="Z"> 관계없음 </Radio>
                 </Radio.Group>
               </Form.Item>
-              <Form.Item label={<b>지원 직무</b>} name="keyword1">
+              <Form.Item label={<b>지원 직무</b>} name="occupation">
                 <Input
                   suffix={
                     <Button
@@ -257,7 +263,6 @@ const Recommendation = () => {
                 >
                   <Select
                     size="large"
-                    defaultValue="00"
                     onChange={handleChangeSelect}
                     options={[
                       { value: '00', label: '학력무관' },
@@ -481,7 +486,7 @@ const Recommendation = () => {
                       </div>
                     </div>
                   ) : (
-                    <Table dataSource={TableData} columns={TableColumns} />
+                    <Table dataSource={searchedOccupation} columns={TableColumns} />
                   )
                 ) : (
                   <div

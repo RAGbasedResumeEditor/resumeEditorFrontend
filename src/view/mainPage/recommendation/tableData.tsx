@@ -109,11 +109,6 @@ export const TableColumns = [
     key: "근무지역",
   },
   {
-    title: "근무형태",
-    dataIndex: "근무형태",
-    key: "근무형태",
-  },
-  {
     title: "최소학력",
     dataIndex: "최소학력",
     key: "최소학력",
