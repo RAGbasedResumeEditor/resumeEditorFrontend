@@ -3,18 +3,25 @@ import { Outlet, Route, Routes } from "react-router-dom";
 import CustomFooter from "../../components/footer";
 import Navbar from "@/components/navbar/navbar";
 import "./mainPage.scss";
-
+import ResumeEdit from "./resumeEdit/resumeEdit";
+import ResumeGuide from "./resumeGuide/resumeGuide";
+import ResumeListDetails from "./resumeList/details/details";
+import Recommendation from "./recommendation/recommendation";
+import FAQ from "./faq/faq";
+import ResumeHistoryDetail from "./resumeList/details/resumeHistory";
+import ResumeList from "./resumeList/resumeList";
+import MyPage from "./myPage/myPage";
 // Lazy load nested components
-const ResumeEdit = lazy(() => import("./resumeEdit/resumeEdit"));
-const ResumeGuide = lazy(() => import("./resumeGuide/resumeGuide"));
-const ResumeListDetails = lazy(() => import("./resumeList/details/details"));
-const Recommendation = lazy(() => import("./recommendation/recommendation"));
-const FAQ = lazy(() => import("./faq/faq"));
-const ResumeHistoryDetail = lazy(
-  () => import("./resumeList/details/resumeHistory")
-);
-const ResumeList = lazy(() => import("./resumeList/resumeList"));
-const MyPage = lazy(() => import("./myPage/myPage"));
+// const ResumeEdit = lazy(() => import("./resumeEdit/resumeEdit"));
+// const ResumeGuide = lazy(() => import("./resumeGuide/resumeGuide"));
+// const ResumeListDetails = lazy(() => import("./resumeList/details/details"));
+// const Recommendation = lazy(() => import("./recommendation/recommendation"));
+// const FAQ = lazy(() => import("./faq/faq"));
+// const ResumeHistoryDetail = lazy(
+//   () => import("./resumeList/details/resumeHistory")
+// );
+// const ResumeList = lazy(() => import("./resumeList/resumeList"));
+// const MyPage = lazy(() => import("./myPage/myPage"));
 
 const MainPage = () => {
   return (
