@@ -3,17 +3,12 @@ import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./routes/protectedRoutes";
 import ProtectLoginRoute from "./routes/protectLoginRoute";
 import LandingPage from "./view/landingPage/landing";
-import Login from "./view/auth/login";
-import SignUp from "./view/auth/signUp";
-import NotFound from "./view/error/notFound/notFound";
-import AdminPage from "./view/admin/adminPage";
-import MainPage from "./view/mainPage/mainPage";
 // lazy하게 로드할 컴포넌트들
-// const Login = lazy(() => import("./view/auth/login"));
-// const SignUp = lazy(() => import("./view/auth/signUp"));
-// const NotFound = lazy(() => import("./view/error/notFound/notFound"));
-// const AdminPage = lazy(() => import("./view/admin/adminPage"));
-// const MainPage = lazy(() => import("./view/mainPage/mainPage"));
+const Login = lazy(() => import("./view/auth/login"));
+const SignUp = lazy(() => import("./view/auth/signUp"));
+const NotFound = lazy(() => import("./view/error/notFound/notFound"));
+const AdminPage = lazy(() => import("./view/admin/adminPage"));
+const MainPage = lazy(() => import("./view/mainPage/mainPage"));
 
 function App() {
   return (

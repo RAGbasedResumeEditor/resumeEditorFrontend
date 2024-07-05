@@ -2,7 +2,6 @@ import React, { CSSProperties, useRef, useState, useEffect } from "react";
 import LandingStat from "./landingStat";
 import LandingReview from "./landingReview";
 import InitialLanding from "./initialLanding";
-import { Modal, isMobileDevice } from "./mobileModal";
 
 const LandingPage = () => {
   // const [isModalVisible, setModalVisible] = useState(false);
