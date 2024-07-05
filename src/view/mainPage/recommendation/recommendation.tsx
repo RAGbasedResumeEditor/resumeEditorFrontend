@@ -486,7 +486,7 @@ const Recommendation = () => {
                       </div>
                     </div>
                   ) : (
-                    <Table dataSource={searchedOccupation} columns={TableColumns} />
+                    <Table scroll={{y:600}} dataSource={searchedOccupation} columns={TableColumns} />
                   )
                 ) : (
                   <div
