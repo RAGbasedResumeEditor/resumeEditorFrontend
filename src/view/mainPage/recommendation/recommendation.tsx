@@ -109,7 +109,7 @@ const Recommendation = () => {
   useEffect(() => {
     axios
       .get(
-        "http://resume-editor-python-git-master-sanghwis-projects.vercel.app/social_enterprise"
+        "https://resume-editor-python-git-master-sanghwis-projects.vercel.app/social_enterprise"
       )
       .then((res) => {
         console.log(res.data.data[0]);
