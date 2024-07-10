@@ -112,7 +112,7 @@ const MyPage = () => {
   const fetchEditRecords = (page: number) => {
     let pageNo = page;
     axiosInstance
-      .get(`/user/edit-list?page=${pageNo - 1}`)
+      .get(`/user/edit-list?pageNo=${pageNo - 1}`)
       .then((res) => {
         if (res.data.response === "게시글이 없습니다.") {
           setEditRecords([]);
