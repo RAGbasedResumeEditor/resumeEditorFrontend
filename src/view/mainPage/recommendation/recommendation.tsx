@@ -477,8 +477,7 @@ const Recommendation = () => {
               boxShadow: "0 0 10px 0 rgb(220, 220, 220)",
               borderRadius: "5px",
               marginBottom: "10px",
-              height: "18%",
-
+              height: "10rem",
               justifyContent: "center",
             }}
           >
