@@ -149,7 +149,7 @@ const MyPage = () => {
   const fetchBookmarks = (page: number) => {
     let pageNo = page;
     axiosInstance
-      .get(`/user/bookmark?page=${pageNo}`)
+      .get(`/user/bookmark?pageNo=${pageNo}`)
       .then((res) => {
         if (res.data.response === "게시글이 없습니다.") {
           setBookmarks([]);
