@@ -5,9 +5,10 @@ import Form from "antd/es/form";
 import Input from "antd/es/input";
 import Radio from "antd/es/radio";
 import Select from "antd/es/select";
+import Modal from "antd/es/modal";
 import { Link, useNavigate } from "react-router-dom";
 import CustomFooter from "../../components/footer";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Timer from "./timer";
@@ -16,6 +17,9 @@ import { RootState } from "@/store/store";
 import { start } from "@/store/features/timer/timerSlice";
 import React from "react";
 import "./signUp.scss";
+import { ServiceAgreement } from "./serviceAgreement";
+import { PrivateInfoAgreement } from "./privateInfoAgreement";
+import { Checkbox } from "antd";
 
 const SignUp = () => {
   let [submitForm] = useForm();
@@ -24,8 +28,14 @@ const SignUp = () => {
   const [selectedStatus, setSelectedStatus] = useState(-1);
   const [emailSend, setEmailSend] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [serviceAgreeCheckbox, setServiceAgreeCheckbox] = useState(false);
+  const [privateInfoAgreeCheckbox, setPrivateInfoAgreeCheckbox] =
+    useState(false);
+  const [allAgreeCheckbox, setAllAgreeCheckbox] = useState(false);
   const timer = useSelector((state: RootState) => state.timer.value);
   const dispatch = useDispatch();
+
   const onSubmitForm = async ({
     email,
     password,
@@ -92,6 +102,49 @@ const SignUp = () => {
   const removeKorean = (event: ChangeEvent<HTMLInputElement>) => {
     event.target.value = event.target.value.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, "");
   };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleAgree = () => {
+    if (serviceAgreeCheckbox && privateInfoAgreeCheckbox) {
+      handleOk();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "동의 필요",
+        text: "모든 약관에 동의하셔야 합니다.",
+      });
+    }
+  };
+
+  const handleAllAgreeChange = () => {
+    const newValue = !(serviceAgreeCheckbox && privateInfoAgreeCheckbox);
+    setServiceAgreeCheckbox(newValue);
+    setPrivateInfoAgreeCheckbox(newValue);
+    setAllAgreeCheckbox(newValue);
+  };
+
+  const handleIndividualChange = (serviceChecked, privateChecked) => {
+    setServiceAgreeCheckbox(serviceChecked);
+    setPrivateInfoAgreeCheckbox(privateChecked);
+    setAllAgreeCheckbox(serviceChecked && privateChecked);
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isModalVisible) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isModalVisible]);
 
   return (
     <div className="signUpOuterContainer">
@@ -449,6 +502,7 @@ const SignUp = () => {
                           backgroundColor: "#85dad2",
                           color: "white",
                         }}
+                        disabled={isModalVisible}
                       >
                         회원가입
                       </Button>
@@ -459,6 +513,108 @@ const SignUp = () => {
             </div>
           </div>
         </div>
+        <Modal
+          width={600}
+          title={
+            <div
+              style={{
+                fontSize: "20px",
+                textAlign: "center",
+                fontFamily: "Prtendard-regular",
+              }}
+            >
+              <b>Reditor 약관동의</b>
+            </div>
+          }
+          open={isModalVisible}
+          onOk={handleAgree}
+          footer={[
+            <div
+              key={"footer1"}
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <Button
+                size="large"
+                style={{
+                  width: "70%",
+                  backgroundColor: "#85dad2",
+                  color: "white",
+                }}
+                key="agree"
+                type="primary"
+                onClick={handleAgree}
+              >
+                동의합니다
+              </Button>
+            </div>,
+          ]}
+          closable={false}
+          maskClosable={false}
+        >
+          <p>
+            <Checkbox
+              checked={serviceAgreeCheckbox}
+              onChange={(e) =>
+                handleIndividualChange(
+                  e.target.checked,
+                  privateInfoAgreeCheckbox
+                )
+              }
+              style={{
+                fontFamily: "Pretendard-SemiBold",
+                textDecoration: "underline",
+              }}
+            >
+              서비스 이용약관 동의 (필수)
+            </Checkbox>
+          </p>
+          <div
+            style={{
+              borderRadius: "5px",
+              height: "150px",
+              overflow: "auto",
+              border: "1px solid #DDDFE1",
+            }}
+          >
+            <ServiceAgreement />
+          </div>
+          <p>
+            <Checkbox
+              checked={privateInfoAgreeCheckbox}
+              onChange={(e) =>
+                handleIndividualChange(serviceAgreeCheckbox, e.target.checked)
+              }
+              style={{
+                fontFamily: "Pretendard-SemiBold",
+                textDecoration: "underline",
+              }}
+            >
+              개인정보 수집 및 이용 동의 (필수)
+            </Checkbox>
+          </p>
+          <div
+            style={{
+              borderRadius: "5px",
+              height: "150px",
+              overflow: "auto",
+              border: "1px solid #DDDFE1",
+            }}
+          >
+            <PrivateInfoAgreement />
+          </div>
+          <p style={{ marginBottom: "7%" }}>
+            <Checkbox
+              checked={allAgreeCheckbox}
+              onChange={handleAllAgreeChange}
+              style={{
+                fontFamily: "Pretendard-SemiBold",
+                textDecoration: "underline",
+              }}
+            >
+              개인정보처리 및 서비스 이용약관에 모두 동의합니다.
+            </Checkbox>
+          </p>
+        </Modal>
       </div>
       <CustomFooter />
     </div>
