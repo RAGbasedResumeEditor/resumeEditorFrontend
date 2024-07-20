@@ -9,7 +9,7 @@ const SignUp = lazy(() => import("./view/auth/signUp"));
 const NotFound = lazy(() => import("./view/error/notFound/notFound"));
 const AdminPage = lazy(() => import("./view/admin/adminPage"));
 const MainPage = lazy(() => import("./view/mainPage/mainPage"));
-
+import "./App.css";
 function App() {
   return (
     <div className="App" style={{ margin: "0" }}>
