@@ -65,7 +65,6 @@ const Recommendation = () => {
   const [advertiseCompany, setAdvertiseCompany] = useState<advertiseCompany>(
     {}
   );
-  const [advertiseCompanyUrl, setAdvertiseCompanyUrl] = useState<string>("");
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access") ?? "";
@@ -112,8 +111,6 @@ const Recommendation = () => {
         "https://resume-editor-python-git-master-sanghwis-projects.vercel.app/social_enterprise"
       )
       .then((res) => {
-        console.log(res.data.data[0]);
-        setAdvertiseCompanyUrl(res.data.data[0].homepageAddrV);
         setAdvertiseCompany(res.data.data[0]);
       })
       .catch((err) => {

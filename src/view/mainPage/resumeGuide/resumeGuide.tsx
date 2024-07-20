@@ -4,6 +4,8 @@ import {
   PlusOutlined,
   MinusOutlined,
   SearchOutlined,
+  StarOutlined,
+  StarFilled,
 } from "@ant-design/icons";
 import { CSSProperties, useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
@@ -17,8 +19,11 @@ import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import axiosInstance from "@/api/api";
 import React from "react";
+import "../resumeList/details/star.css";
+import TextArea from "antd/es/input/TextArea";
 
 const ResumeGuide = () => {
+  const [openRateModal, setOpenRateModal] = useState<boolean>(false);
   const [userInputForm] = useForm();
   const [generated, setGenerated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +43,21 @@ const ResumeGuide = () => {
   const [occupationSearchResults, setOccupationSearchResults] = useState([]);
   const [occupationSearchLoading, setOccupationSearchLoading] = useState(false);
   const [occupationSearchError, setOccupationSearchError] = useState("");
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  const handleClick = (value) => {
+    let num = parseFloat(value);
+    setRating(num);
+  };
+
+  const handleMouseOver = (value) => {
+    setHover(value);
+  };
+
+  const handleMouseOut = () => {
+    setHover(0);
+  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access") ?? "";
@@ -666,11 +686,28 @@ const ResumeGuide = () => {
                     </div>
                   </div>
                 ) : (
-                  result
-                    .split("\n")
-                    .map((text, index) => (
+                  <div>
+                    {result.split("\n").map((text, index) => (
                       <div key={index}>{applyStyleToText(text)}</div>
-                    ))
+                    ))}
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Button
+                        style={{ backgroundColor: "#85DAD2", color: "white" }}
+                        size="large"
+                        onClick={() => {
+                          setOpenRateModal(true);
+                        }}
+                      >
+                        후기 남기기
+                      </Button>
+                    </div>
+                  </div>
                 )
               ) : (
                 <div
@@ -754,6 +791,90 @@ const ResumeGuide = () => {
             style={{ marginTop: "20px" }}
           />
         )}
+      </Modal>
+      <Modal
+        title={
+          <div style={{ textAlign: "center" }}>
+            해당 글에 대한 후기를 남겨주세요!
+          </div>
+        }
+        centered
+        open={openRateModal}
+        onCancel={() => {
+          setOpenRateModal(false);
+        }}
+        footer={[
+          <div
+            key={"onOk"}
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <Button
+              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              size="large"
+              onClick={() => {
+                let accessToken = localStorage.getItem("access") ?? "";
+                let DecodedToken: DecodedToken = jwtDecode(accessToken);
+                let res = axiosInstance
+
+                  .post("/board/rating", {
+                    rating: rating,
+                    unum: DecodedToken.uNum,
+                  })
+                  .then((res) => {
+                    setOpenRateModal(false);
+
+                    Swal.fire({
+                      icon: "success",
+                      title: "후기가 등록되었습니다!",
+                      text: "감사합니다 :)",
+                    });
+                  });
+              }}
+            >
+              평가하기!
+            </Button>
+          </div>,
+        ]}
+      >
+        <div className="star-rating">
+          {[...Array(5)].map((_, index) => {
+            const value = (index + 1) * 2;
+            const halfValue = value - 1;
+            return (
+              <span
+                key={`star${index}`}
+                className="star"
+                onClick={() => {
+                  handleClick(value / 2);
+                }}
+                onMouseOver={() => handleMouseOver(value)}
+                onMouseOut={handleMouseOut}
+              >
+                {hover >= value || rating >= value / 2 ? (
+                  <StarFilled
+                    style={{ color: hover >= value ? "#ffc107" : "#ffa500" }}
+                  />
+                ) : hover >= halfValue || rating >= halfValue / 2 ? (
+                  <StarFilled
+                    style={{
+                      color: hover >= halfValue ? "#ffc107" : "#ffa500",
+                    }}
+                    className="half"
+                  />
+                ) : (
+                  <StarOutlined style={{ color: "#ddd" }} />
+                )}
+              </span>
+            );
+          })}
+        </div>
+        <div>
+          <TextArea
+            style={{ fontSize: "20px" }}
+            rows={5}
+            placeholder="후기를 남겨주세요"
+          ></TextArea>
+        </div>
       </Modal>
     </div>
   );

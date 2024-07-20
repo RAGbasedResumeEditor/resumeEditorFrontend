@@ -7,8 +7,13 @@ import {
   Switch,
   Tooltip,
   Select,
+  Modal,
 } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  StarFilled,
+  StarOutlined,
+} from "@ant-design/icons";
 import { CSSProperties, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import axiosInstance from "@/api/api";
@@ -34,6 +39,23 @@ const ResumeEdit = () => {
   const [result, setResult] = useState("");
   const [diffResult, setDiffResult] = useState([]); // 추가된 줄
   const [showDiff, setShowDiff] = useState(false); // Diff 결과를 보여줄지 여부를 저장하는 상태
+
+  const [openRateModal, setOpenRateModal] = useState<boolean>(false);
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  const handleClick = (value) => {
+    let num = parseFloat(value);
+    setRating(num);
+  };
+
+  const handleMouseOver = (value) => {
+    setHover(value);
+  };
+
+  const handleMouseOut = () => {
+    setHover(0);
+  };
 
   const techniques = {
     normal: "기본",
@@ -470,6 +492,19 @@ const ResumeEdit = () => {
                       >
                         Diff 결과 보기
                       </Button>
+                      <Button
+                        type="primary"
+                        onClick={() => setOpenRateModal(true)}
+                        style={{
+                          marginLeft: "20px",
+                          backgroundColor: "#85DAD2",
+                          color: "white",
+                          fontWeight: "bold",
+                          marginTop: "10px",
+                        }}
+                      >
+                        후기 남기기
+                      </Button>
                     </div>
                   ) : (
                     <div>
@@ -516,6 +551,90 @@ const ResumeEdit = () => {
           </div>
         </div>
       </div>
+      <Modal
+        title={
+          <div style={{ textAlign: "center" }}>
+            해당 글에 대한 후기를 남겨주세요!
+          </div>
+        }
+        centered
+        open={openRateModal}
+        onCancel={() => {
+          setOpenRateModal(false);
+        }}
+        footer={[
+          <div
+            key={"onOk"}
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <Button
+              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              size="large"
+              onClick={() => {
+                let accessToken = localStorage.getItem("access") ?? "";
+                let DecodedToken: DecodedToken = jwtDecode(accessToken);
+                let res = axiosInstance
+
+                  .post("/board/rating", {
+                    rating: rating,
+                    unum: DecodedToken.uNum,
+                  })
+                  .then((res) => {
+                    setOpenRateModal(false);
+
+                    Swal.fire({
+                      icon: "success",
+                      title: "후기가 등록되었습니다!",
+                      text: "감사합니다 :)",
+                    });
+                  });
+              }}
+            >
+              평가하기!
+            </Button>
+          </div>,
+        ]}
+      >
+        <div className="star-rating">
+          {[...Array(5)].map((_, index) => {
+            const value = (index + 1) * 2;
+            const halfValue = value - 1;
+            return (
+              <span
+                key={`star${index}`}
+                className="star"
+                onClick={() => {
+                  handleClick(value / 2);
+                }}
+                onMouseOver={() => handleMouseOver(value)}
+                onMouseOut={handleMouseOut}
+              >
+                {hover >= value || rating >= value / 2 ? (
+                  <StarFilled
+                    style={{ color: hover >= value ? "#ffc107" : "#ffa500" }}
+                  />
+                ) : hover >= halfValue || rating >= halfValue / 2 ? (
+                  <StarFilled
+                    style={{
+                      color: hover >= halfValue ? "#ffc107" : "#ffa500",
+                    }}
+                    className="half"
+                  />
+                ) : (
+                  <StarOutlined style={{ color: "#ddd" }} />
+                )}
+              </span>
+            );
+          })}
+        </div>
+        <div>
+          <TextArea
+            style={{ fontSize: "20px" }}
+            rows={5}
+            placeholder="후기를 남겨주세요"
+          ></TextArea>
+        </div>
+      </Modal>
     </div>
   );
 };

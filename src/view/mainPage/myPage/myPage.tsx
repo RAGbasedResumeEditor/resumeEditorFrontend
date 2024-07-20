@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import React from "react";
 import Swal from "sweetalert2";
 import { Modal } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { StarFilled, StarOutlined } from "@ant-design/icons";
 interface DecodedToken {
   category: string;
   exp: number;
@@ -83,8 +85,25 @@ const MyPage = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [bookmarkClicked, setBookmarkClicked] = useState<boolean>(false);
-  const [editRecordClicked, setEditRecordClicked] = useState<boolean>(false);
+  const [editRecordClicked, setEditRecordClicked] = useState<boolean>(true);
+  const [guideRecordClicked, setGuideRecordClicked] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [openRateModal, setOpenRateModal] = useState<boolean>(false);
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  const handleClick = (value) => {
+    let num = parseFloat(value);
+    setRating(num);
+  };
+
+  const handleMouseOver = (value) => {
+    setHover(value);
+  };
+
+  const handleMouseOut = () => {
+    setHover(0);
+  };
   const fetchUserInfo = () => {
     let res = axiosInstance
       .post("/user/search")
@@ -117,7 +136,13 @@ const MyPage = () => {
         if (res.data.response === "게시글이 없습니다.") {
           setEditRecords([]);
         } else {
-          setEditRecords(res.data.response);
+          let newData = res.data.response.map((data: EditRecord) => {
+            return {
+              ...data,
+              w_date: data.w_date.slice(0, 10),
+            };
+          });
+          setEditRecords(newData);
           setTotalPages(res.data.totalPages);
         }
       })
@@ -129,7 +154,7 @@ const MyPage = () => {
 
   const onEdit = ({ email, age, birthDate, wish, company, occupation }) => {
     let res = axiosInstance
-      .post("/user/update", {
+      .patch("/user", {
         email: email,
         age: age,
         birthDate: birthDate,
@@ -244,10 +269,18 @@ const MyPage = () => {
       className="mypageWrapper"
       style={{ padding: "3% 10%", display: "flex", width: "80%" }}
     >
-      <div className="mypageLeft" style={{ width: "40%", paddingRight: "2%" }}>
+      <div className="mypageLeft" style={{ width: "50%", paddingRight: "2%" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           {userInfo.mode && <Ring mode={userInfo.mode} />}
-          <div style={{ flex: 1, marginLeft: "8px" }}>
+          <div
+            style={{
+              flex: 1,
+              marginLeft: "8px",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              position: "relative",
+            }}
+          >
             <div>{userInfo.username}님</div>
             <div>
               <a
@@ -259,6 +292,7 @@ const MyPage = () => {
                 onClick={() => {
                   setActiveTab("editHistory");
                   setEditRecordClicked(true);
+                  setGuideRecordClicked(false);
                   setBookmarkClicked(false);
                 }}
               >
@@ -272,14 +306,46 @@ const MyPage = () => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setActiveTab("bookmarks");
+                  setActiveTab("bookmark");
                   setBookmarkClicked(true);
+                  setGuideRecordClicked(false);
                   setEditRecordClicked(false);
                 }}
               >
                 내 즐겨찾기
+              </a>{" "}
+              ·{" "}
+              <a
+                style={{
+                  color: guideRecordClicked ? "black" : "gray",
+                  fontWeight: guideRecordClicked ? "bold" : "normal",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setActiveTab("guideHistory");
+                  setBookmarkClicked(false);
+                  setGuideRecordClicked(true);
+                  setEditRecordClicked(false);
+                }}
+              >
+                가이드 기록
               </a>
             </div>
+          </div>
+          <div>
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => setOpenRateModal(true)}
+              style={{
+                marginTop: "10px",
+                backgroundColor: "#85DAD2",
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              후기 남기기
+            </Button>
           </div>
         </div>
         <div
@@ -482,20 +548,17 @@ const MyPage = () => {
             onClick={() => {
               let accessToken = localStorage.getItem("access") ?? "";
               let Decoded: DecodedToken = jwtDecode(accessToken);
-              axios
-                .post("/user/delete", {
-                  unum: Decoded.uNum,
-                })
-                .then((res) => {
-                  Swal.fire({
-                    icon: "success",
-                    title: "회원 탈퇴 완료",
-                    text: "그동안 이용해주셔서 감사합니다.",
-                  }).then(() => {
-                    localStorage.clear();
-                    window.location.href = "/";
-                  });
+              let uNum = Decoded.uNum;
+              axios.delete(`/user/${uNum}`).then((res) => {
+                Swal.fire({
+                  icon: "success",
+                  title: "회원 탈퇴 완료",
+                  text: "그동안 이용해주셔서 감사합니다.",
+                }).then(() => {
+                  localStorage.clear();
+                  window.location.href = "/";
                 });
+              });
             }}
           >
             예
@@ -513,6 +576,90 @@ const MyPage = () => {
         <span style={{ fontSize: "1.2rem" }}>
           <b>정말 탈퇴하시겠습니까?</b>
         </span>
+      </Modal>
+      <Modal
+        title={
+          <div style={{ textAlign: "center" }}>
+            해당 글에 대한 후기를 남겨주세요!
+          </div>
+        }
+        centered
+        open={openRateModal}
+        onCancel={() => {
+          setOpenRateModal(false);
+        }}
+        footer={[
+          <div
+            key={"onOk"}
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <Button
+              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              size="large"
+              onClick={() => {
+                let accessToken = localStorage.getItem("access") ?? "";
+                let DecodedToken: DecodedToken = jwtDecode(accessToken);
+                let res = axiosInstance
+
+                  .post("/board/rating", {
+                    rating: rating,
+                    unum: DecodedToken.uNum,
+                  })
+                  .then((res) => {
+                    setOpenRateModal(false);
+
+                    Swal.fire({
+                      icon: "success",
+                      title: "후기가 등록되었습니다!",
+                      text: "감사합니다 :)",
+                    });
+                  });
+              }}
+            >
+              평가하기!
+            </Button>
+          </div>,
+        ]}
+      >
+        <div className="star-rating">
+          {[...Array(5)].map((_, index) => {
+            const value = (index + 1) * 2;
+            const halfValue = value - 1;
+            return (
+              <span
+                key={`star${index}`}
+                className="star"
+                onClick={() => {
+                  handleClick(value / 2);
+                }}
+                onMouseOver={() => handleMouseOver(value)}
+                onMouseOut={handleMouseOut}
+              >
+                {hover >= value || rating >= value / 2 ? (
+                  <StarFilled
+                    style={{ color: hover >= value ? "#ffc107" : "#ffa500" }}
+                  />
+                ) : hover >= halfValue || rating >= halfValue / 2 ? (
+                  <StarFilled
+                    style={{
+                      color: hover >= halfValue ? "#ffc107" : "#ffa500",
+                    }}
+                    className="half"
+                  />
+                ) : (
+                  <StarOutlined style={{ color: "#ddd" }} />
+                )}
+              </span>
+            );
+          })}
+        </div>
+        <div>
+          <TextArea
+            style={{ fontSize: "20px" }}
+            rows={5}
+            placeholder="후기를 남겨주세요"
+          ></TextArea>
+        </div>
       </Modal>
     </div>
   );
