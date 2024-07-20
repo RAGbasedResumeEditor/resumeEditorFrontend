@@ -118,7 +118,7 @@ const AdminUserList = () => {
   ];
   const fetchSearch = (page: number, search: string) => {
     let res = axiosInstance
-      .get("/admin/user/search", {
+      .get("/admin/user/list/search", {
         params: {
           pageNo: page,
           keyword: search,
@@ -126,7 +126,7 @@ const AdminUserList = () => {
         },
       })
       .then((res) => {
-        let newData = res.data.response.map((data: any, idx: number) => {
+        let newData = res.data.user_list.map((data: any, idx: number) => {
           return {
             ...data,
             key: idx,
@@ -135,7 +135,7 @@ const AdminUserList = () => {
           };
         });
         setUserList(newData);
-        setTotalPage(res.data.totalPages);
+        setTotalPage(res.data.total_page);
       })
       .catch((err) => {
         Swal.fire({
@@ -163,7 +163,8 @@ const AdminUserList = () => {
         },
       })
       .then((res) => {
-        let newData = res.data.response.map((data: any, idx: number) => {
+        console.log(res);
+        let newData = res.data.user_list.map((data: any, idx: number) => {
           return {
             ...data,
             key: idx,
@@ -172,7 +173,7 @@ const AdminUserList = () => {
           };
         });
         setUserList(newData);
-        setTotalPage(res.data.totalPages);
+        setTotalPage(res.data.total_page);
       });
   };
   useEffect(() => {
@@ -235,9 +236,7 @@ const AdminUserList = () => {
             key={"ok"}
             onClick={() => {
               let res = axiosInstance
-                .post(`/admin/user/delete/${selectedRow.unum}`, {
-                  unum: selectedRow.unum,
-                })
+                .delete(`/admin/user/${selectedRow.unum}`)
                 .then((res) => {
                   if (searchedText === "") fetchUserList(currentPage - 1);
                   else {

@@ -54,33 +54,29 @@ const AdminUserStat = () => {
   };
   const fetchUserStatData = async (group: string) => {
     let res = await axiosInstance
-      .get("/admin/stattistics/user", {
-        params: {
-          group: group,
-        },
-      })
+      .get(`/statistics/user/${group}`)
       .then((res) => {
         switch (group) {
           case "count":
-            setUserCount(res.data.response.total_user);
+            setUserCount(res.data.total_count);
             break;
           case "gender":
-            setUserGender(res.data.response);
+            setUserGender(res.data);
             break;
           case "age":
-            setAgeRange(res.data.response);
+            setAgeRange(res.data);
             break;
           case "status":
-            setEmployRate(res.data.response);
+            setEmployRate(res.data);
             break;
           case "pro":
-            setUserProCount(res.data.response.pro);
+            setUserProCount(res.data.pro);
             break;
-          case "visitTotal":
-            setTotalVisit(res.data.response.total_visit);
+          case "total-visit":
+            setTotalVisit(res.data.visit_total);
             break;
-          case "visitToday":
-            setTodayVisit(res.data.response.today_visit);
+          case "today-visit":
+            setTodayVisit(res.data.visit_today);
             break;
         }
       })
@@ -92,14 +88,14 @@ const AdminUserStat = () => {
   const fetchAccumulatedData = async (group: string) => {
     try {
       const res = await axiosInstance
-        .get(`/admin/statistics/user/${group}`)
+        .get(`/statistics/user/${group}`)
         .then((res) => {
           switch (group) {
-            case "traffic":
-              setTrafficData(res.data.response.traffic_data);
+            case "access":
+              setTrafficData(res.data.traffic_date);
               break;
             case "signup":
-              setSignupData(res.data.response.signup_data);
+              setSignupData(res.data.signup_date);
               break;
           }
         });
@@ -112,15 +108,15 @@ const AdminUserStat = () => {
     await Promise.all([
       fetchUserStatData("count"),
       fetchUserStatData("pro"),
-      fetchUserStatData("visitTotal"),
-      fetchUserStatData("visitToday"),
+      fetchUserStatData("total-visit"),
+      fetchUserStatData("today-visit"),
       fetchUserStatData("gender"),
       fetchUserStatData("age"),
       fetchUserStatData("status"),
       fetchAdminStatData("occupation"),
       fetchAdminStatData("company"),
       fetchAdminStatData("wish"),
-      fetchAccumulatedData("traffic"),
+      fetchAccumulatedData("access"),
       fetchAccumulatedData("signup"),
     ]);
   };
@@ -133,45 +129,48 @@ const AdminUserStat = () => {
     if (selectedType == "월별") {
       const valueOfInput = range.format();
       const res = axiosInstance
-        .get("/admin/statistics/user/access", {
+        .get("/statistics/user/access", {
           params: {
-            month: valueOfInput.slice(0, 10),
+            monthly: valueOfInput.slice(0, 10),
           },
         })
         .then((res) => {
-          setTrafficData(res.data.response.traffic_data);
+          console.log(res);
+          setTrafficData(res.data.traffic_date);
         });
       const res2 = axiosInstance
-        .get("/admin/statistics/user/signup", {
+        .get("/statistics/user/signup", {
           params: {
-            month: valueOfInput.slice(0, 10),
+            monthly: valueOfInput.slice(0, 10),
           },
         })
         .then((res) => {
-          setSignupData(res.data.response.signup_data);
+          console.log(res);
+          setSignupData(res.data.signup_date);
         });
     } else {
       const valueOfInput1 = range[0].format();
       const valueOfInput2 = range[1].format();
       const res = axiosInstance
-        .get("/admin/statistics/user/access", {
+        .get("/statistics/user/access", {
           params: {
             startDate: valueOfInput1.slice(0, 10),
             endDate: valueOfInput2.slice(0, 10),
           },
         })
         .then((res) => {
-          setTrafficData(res.data.response.traffic_data);
+          console.log(res);
+          setTrafficData(res.data.traffic_date);
         });
       const res2 = axiosInstance
-        .get("/admin/statistics/user/signup", {
+        .get("/statistics/user/signup", {
           params: {
             startDate: valueOfInput1.slice(0, 10),
             endDate: valueOfInput2.slice(0, 10),
           },
         })
         .then((res) => {
-          setSignupData(res.data.response.signup_data);
+          setSignupData(res.data.signup_date);
         });
     }
   };

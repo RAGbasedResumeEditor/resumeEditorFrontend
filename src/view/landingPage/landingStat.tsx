@@ -18,36 +18,30 @@ const LandingStat = () => {
   const animationDuration = 4;
 
   const fetchLandingStatData = async (group: string) => {
-    let res = await axios
-      .get("/landing/statistics", {
-        params: {
-          group: group,
-        },
-      })
-      .then((res) => {
-        switch (group) {
-          case "countUser":
-            setTotalUser(res.data.response.total_user);
-            break;
-          case "visitTotal":
-            setTotalVisitor(res.data.response.total_visit);
-            break;
-          case "editTotal":
-            setTotalEdit(res.data.response.edit_count);
-            break;
-          case "boardTotal":
-            setTotalResume(res.data.response.total_board);
-            break;
-        }
-      });
+    let res = await axios.get(`/landing/statistics/${group}`).then((res) => {
+      switch (group) {
+        case "user-count":
+          setTotalUser(res.data.total_count);
+          break;
+        case "total-visit":
+          setTotalVisitor(res.data.visit_total);
+          break;
+        case "total-edit":
+          setTotalEdit(res.data.total_edit);
+          break;
+        case "total-board":
+          setTotalResume(res.data.total_board);
+          break;
+      }
+    });
   };
 
   useEffect(() => {
     Promise.all([
-      fetchLandingStatData("countUser"),
-      fetchLandingStatData("visitTotal"),
-      fetchLandingStatData("editTotal"),
-      fetchLandingStatData("boardTotal"),
+      fetchLandingStatData("user-count"),
+      fetchLandingStatData("total-visit"),
+      fetchLandingStatData("total-edit"),
+      fetchLandingStatData("total-board"),
     ]);
   }, []);
 

@@ -43,20 +43,22 @@ const AdminResumeList = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const fetchResumeList = (page: number) => {
     let res = axiosInstance
-      .get("/admin/resume/board/list", {
+      .get("/admin/resume/board", {
         params: {
           pageNo: page,
         },
       })
       .then((res) => {
-        let newData = res.data.response.map((data: any, idx) => {
+        console.log(res);
+        let newData = res.data.resume_board_list.map((data: any, idx) => {
           return {
             ...data,
             key: idx,
+            w_date: data.w_date.slice(0, 10),
           };
         });
         setResumeList(newData);
-        setTotalPage(res.data.totalPages);
+        setTotalPage(res.data.total_page);
       });
   };
   useEffect(() => {

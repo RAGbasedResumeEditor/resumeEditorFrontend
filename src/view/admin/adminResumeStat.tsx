@@ -33,23 +33,20 @@ const AdminResumeStat = () => {
 
   const fetchSquareData = async (group: string) => {
     let res = await axiosInstance
-      .get(`admin/statistics/resume/count`, {
-        params: {
-          group: group,
-        },
-      })
+      .get(`statistics/resume/count/${group}`)
       .then((res) => {
         switch (group) {
-          case "editTotal": //엄청느림
-            setEditTotal(res.data.response.edit_count);
+          case "total-edit":
+            setEditTotal(res.data.total_edit);
             break;
-          case "editToday":
-            setEditToday(res.data.response.edit_count);
+          case "today-edit":
+            setEditToday(res.data.today_edit);
             break;
-          case "boardToday":
-            setTotalResume(res.data.response.total_board);
+          case "toal-board":
+            setTotalResume(res.data.total_board);
             break;
         }
+        console.log(res);
       })
       .catch((err) => {
         console.log("박스데이터를 가져오는데 오류가 발생했습니다", err);
@@ -144,9 +141,9 @@ const AdminResumeStat = () => {
     await Promise.all([
       fetchAccumulatedData("traffic"),
       fetchAccumulatedData("signup"),
-      fetchSquareData("editTotal"),
-      fetchSquareData("editToday"),
-      fetchSquareData("boardToday"),
+      fetchSquareData("total-edit"),
+      fetchSquareData("today-edit"),
+      fetchSquareData("total-board"),
       fetchRankData("occupation"),
       fetchRankData("company"),
       fetchRatioData("mode"),
