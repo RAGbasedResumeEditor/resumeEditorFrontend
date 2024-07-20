@@ -1,4 +1,3 @@
-import CustomFooter from "@/components/footer";
 import Button from "antd/es/button";
 import Form from "antd/es/form";
 import Input from "antd/es/input";
