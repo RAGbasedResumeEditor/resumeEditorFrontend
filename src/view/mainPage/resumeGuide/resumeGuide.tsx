@@ -220,7 +220,8 @@ const ResumeGuide = () => {
     const decodedToken: DecodedToken = jwtDecode(accessToken);
     const uNum = decodedToken.uNum;
     const axiosInstance_python = axios.create({
-      baseURL: "https://resume-editor-python.vercel.app",
+      baseURL:
+        "http://ec2-43-200-240-202.ap-northeast-2.compute.amazonaws.com:8088/gpt",
       timeout: 100000,
       withCredentials: true,
       headers: {

@@ -37,6 +37,7 @@ const Login = () => {
           password: password,
         })
         .then((res) => {
+          console.log(res);
           if (res.status == 200) {
             let accessToken = res.headers["access"];
             let refreshToken = res.headers["refresh"];
@@ -53,6 +54,7 @@ const Login = () => {
           }
         });
     } catch (err) {
+      console.log(err);
       if (err.response.status === 401) {
         console.log(
           err.response.data.message.split(" ")[0],
