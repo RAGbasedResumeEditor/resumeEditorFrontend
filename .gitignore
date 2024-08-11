@@ -23,3 +23,16 @@ yarn-debug.log*
 yarn-error.log*
 .vercel
 .env
+.idea/checkstyle-idea.xml
+
+.idea/git_toolbox_blame.xml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/resumeEditorFrontend.iml
+
+.idea/vcs.xml
+
+.idea/workspace.xml
