@@ -21,14 +21,18 @@
       href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Noto+Sans+KR:wght@100..900&display=swap"
       rel="stylesheet"
     />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Noto Sans KR", "Karla", sans-serif;
+        scroll-behavior: smooth;
+      }
+    </style>
   </head>
-  <body
-    style="
-      margin: 0;
-      font-family: Noto Sans KR, Karla, sans-serif;
-      scroll-behavior: smooth;
-    "
-  >
+  <body>
     <div id="root"></div>
   </body>
   <script type="module" src="/src/index.tsx"></script>
