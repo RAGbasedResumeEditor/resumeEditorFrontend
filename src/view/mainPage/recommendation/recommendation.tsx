@@ -108,7 +108,7 @@ const Recommendation = () => {
   useEffect(() => {
     axios
       .get(
-        "https://resume-editor-python-git-master-sanghwis-projects.vercel.app/social_enterprise"
+        "https://ec2-43-200-240-202.ap-northeast-2.compute.amazonaws.com:8088/gpt/social-enterprise"
       )
       .then((res) => {
         setAdvertiseCompany(res.data.data[0]);
@@ -123,14 +123,17 @@ const Recommendation = () => {
     maxPay = parseInt(maxPay);
     let salTp = "Y";
     let res = axios
-      .post("https://resume-editor-python.vercel.app/job_search", {
-        career: career,
-        education: education,
-        minPay: minPay,
-        maxPay: maxPay,
-        salTp: salTp,
-        keyword: occupation,
-      })
+      .post(
+        "https://ec2-43-200-240-202.ap-northeast-2.compute.amazonaws.com:8088/gptjob-search",
+        {
+          career: career,
+          education: education,
+          minPay: minPay,
+          maxPay: maxPay,
+          salTp: salTp,
+          keyword: occupation,
+        }
+      )
       .then((res) => {
         let newData = res.data.result.map((data, index) => ({
           ...data,
