@@ -9,13 +9,12 @@ import React from "react";
 import axios from "axios";
 
 interface ResumeList {
-  num: number;
-  r_num: number;
+  resumeBoardNo: number;
   rating: number;
-  rating_count: number;
-  read_num: number;
+  ratingCount: number;
+  readCount: number;
   title: string;
-  w_date: string;
+  createdDate: string;
   content: string;
 }
 
@@ -46,20 +45,24 @@ const ResumeList = () => {
     setTotalPages(res.data.totalPages);
   }
 
-  async function fetchTopResumes(
-    group: string,
+  async function fetchTopRatedResumes(
     setter: (data: ResumeList[]) => void
   ) {
-    let res = await axiosInstance.get("/board/list/rank", {
-      params: { group },
-    });
+    let res = await axiosInstance.get("/board/list/rank/rating");
+    setter(res.data.response);
+  }
+
+  async function fetchTopReadResumes(
+    setter: (data: ResumeList[]) => void
+  ) {
+    let res = await axiosInstance.get("/board/list/rank/read-count");
     setter(res.data.response);
   }
 
   useEffect(() => {
-    fetchList(0);
-    fetchTopResumes("rating", setTopRatedResumes);
-    fetchTopResumes("read_num", setTopReadResumes);
+    fetchList(1);
+    fetchTopRatedResumes(setTopRatedResumes);
+    fetchTopReadResumes(setTopReadResumes);
   }, []);
 
   return (
@@ -110,7 +113,7 @@ const ResumeList = () => {
             <div style={{ flex: "1" }}>
               <h4 style={{ color: "black", marginBottom: "4px" }}>
                 <Link
-                  to={`/main/resumelist/${resume.r_num}`}
+                  to={`/main/resumelist/${resume.resumeBoardNo}`}
                   style={{ color: "black" }}
                 >
                   {resume.title}
@@ -130,9 +133,9 @@ const ResumeList = () => {
                 {resume.content}
               </p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>{resume.w_date}</span>
+                <span>{resume.createdDate.slice(0, 10)}</span>
                 <span>
-                  <EyeOutlined /> {resume.read_num}
+                  <EyeOutlined /> {resume.readCount}
                 </span>
               </div>
               <div style={{ position: "absolute", top: "10px", right: "10px" }}>
@@ -180,7 +183,7 @@ const ResumeList = () => {
             <div style={{ flex: "1" }}>
               <h4 style={{ color: "black", marginBottom: "4px" }}>
                 <Link
-                  to={`/main/resumelist/${resume.r_num}`}
+                  to={`/main/resumelist/${resume.resumeBoardNo}`}
                   style={{ color: "black" }}
                 >
                   {resume.title}
@@ -200,9 +203,9 @@ const ResumeList = () => {
                 {resume.content}
               </p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>{resume.w_date}</span>
+                <span>{resume.createdDate.slice(0, 10)}</span>
                 <span>
-                  <EyeOutlined /> {resume.read_num}
+                  <EyeOutlined /> {resume.readCount}
                 </span>
               </div>
               <div style={{ position: "absolute", top: "10px", right: "10px" }}>
@@ -266,7 +269,7 @@ const ResumeList = () => {
                     <h3>
                       <Link
                         style={{ color: "black" }}
-                        to={`/main/resumelist/${resume.r_num}`}
+                        to={`/main/resumelist/${resume.resumeBoardNo}`}
                       >
                         {resume.title}
                       </Link>
@@ -295,9 +298,9 @@ const ResumeList = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <div className="contentDate">{resume.w_date}</div>
+                    <div className="contentDate">{resume.createdDate.slice(0, 10)}</div>
                     <div className="contentView">
-                      <EyeOutlined /> {resume.read_num}
+                      <EyeOutlined /> {resume.readCount}
                     </div>
                   </div>
                 </div>
