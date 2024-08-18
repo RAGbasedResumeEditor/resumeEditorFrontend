@@ -20,25 +20,25 @@ import {
 import Swal from "sweetalert2";
 interface Resume {
   content: string;
-  r_num: number;
+  resumeBoardNo: number;
   rating: number;
-  rating_count: number;
-  read_num: number;
+  ratingCount: number;
+  readCount: number;
   item: string;
   title: string;
   username: string;
   u_num: number;
-  w_date: string;
+  questions: string;
+  createdDate: string;
 }
 
 interface Comment {
-  c_content: string;
-  c_num: number;
-  num: number;
-  r_num: number;
-  u_num: number;
+  content: string;
+  commentNo: number;
+  resumeBoardNo: number;
+  userNo: number;
   username: string;
-  w_date: string;
+  createdDate: string;
 }
 
 const ResumeListDetails = () => {
@@ -68,6 +68,7 @@ const ResumeListDetails = () => {
   };
   const accessToken = localStorage.getItem("access") ?? "";
   const DecodedToken: DecodedToken = jwtDecode(accessToken);
+  
   const userInfo = DecodedToken.username;
   const userRole = DecodedToken.role;
   const param = useParams();
@@ -79,7 +80,7 @@ const ResumeListDetails = () => {
         },
       })
       .then((res) => {
-        if (res.data.response == "댓글이 없습니다.") {
+        if (res.data.response == "결과가 존재하지 않습니다") {
           setComment([]);
         } else {
           setComment(res.data.response);
@@ -87,12 +88,14 @@ const ResumeListDetails = () => {
       });
   };
   const fetchResume = () => {
-    let res = axiosInstance.get(`/board/list/${param.id}`).then((res) => {
-      setResume(res.data);
+    let res = axiosInstance.get(`/board/${param.id}`).then((res) => {
+      console.log(res.data); // 콘솔에 res.data 출력
+
+      setResume(res.data.response);
     });
   };
 
-  const deleteComment = (c_num: number) => {
+  const deleteComment = (commentNo: number) => {
     Modal.confirm({
       title: "댓글 삭제하기",
       content: (
@@ -106,8 +109,7 @@ const ResumeListDetails = () => {
 
       onOk() {
         let res = axiosInstance
-          .put(`/comments/delete/${c_num}`, {
-            c_num: c_num,
+          .delete(`/comments/${commentNo}`, {
           })
           .then((res) => {
             fetchComment(0);
@@ -120,8 +122,8 @@ const ResumeListDetails = () => {
   };
 
   const fetchLiked = () => {
-    let res = axiosInstance.get(`/board/bookmark/${param.id}`).then((res) => {
-      if (res.data.response == "false") {
+    let res = axiosInstance.get(`/board/${param.id}/bookmark/exist`).then((res) => {
+      if (res.data.response == false) {
         setStarClicked(false);
       } else {
         setStarClicked(true);
@@ -130,7 +132,7 @@ const ResumeListDetails = () => {
   };
 
   const fetchRated = () => {
-    let res = axiosInstance.get(`/board/rating/${param.id}`).then((res) => {
+    let res = axiosInstance.get(`/board/${param.id}/rating`).then((res) => {
       if (res.data.response == 0) {
         setRated(false);
       } else {
@@ -168,8 +170,8 @@ const ResumeListDetails = () => {
               onClick={() => {
                 let res = axiosInstance
                   .post("/board/bookmark", {
-                    rnum: resume.r_num,
-                    unum: DecodedToken.uNum,
+                    resumeBoardNo: resume.resumeBoardNo,
+                    userNo: DecodedToken.uNum,
                   })
                   .then((res) => {
                     alert("즐겨찾기에서 삭제되었습니다.");
@@ -183,8 +185,8 @@ const ResumeListDetails = () => {
               onClick={() => {
                 let res = axiosInstance
                   .post("/board/bookmark", {
-                    rnum: resume.r_num,
-                    unum: DecodedToken.uNum,
+                    resumeBoardNo: resume.resumeBoardNo,
+                    userNo: DecodedToken.uNum,
                   })
                   .then((res) => {
                     setStarClicked(true);
@@ -199,7 +201,7 @@ const ResumeListDetails = () => {
           <h1>{resume.title}</h1>
         </div>
         <div className="DetailContentDate">
-          <h3>작성일자: {resume.w_date}</h3>
+          <h3>작성일자: {resume.createdDate?.slice(0, 10)}</h3>
         </div>
         <div className="DetailContentTitle">
           <h3>{resume.item}</h3>
@@ -226,16 +228,16 @@ const ResumeListDetails = () => {
             <b>총 댓글수:</b> {comment.length}
           </div>
           <div>
-            <b>총 조회수:</b> {resume.read_num}
+            <b>총 조회수:</b> {resume.readCount}
           </div>
           <div>
-            <b>작성일:</b> {resume.w_date}
+            <b>작성일:</b> {resume.createdDate?.slice(0, 10)}
           </div>
           <div>
             <b>평점:</b>
             <span>{resume.rating} / 5</span>
             <span style={{ marginLeft: "3%" }}>
-              (<UserOutlined /> {resume.rating_count}명 참여)
+              (<UserOutlined /> {resume.ratingCount}명 참여)
             </span>
           </div>
 
@@ -284,7 +286,7 @@ const ResumeListDetails = () => {
                         }}
                       >
                         <div
-                          onClick={() => setEditId(comment.c_num)}
+                          onClick={() => setEditId(comment.commentNo)}
                           style={{ cursor: "pointer" }}
                         >
                           수정
@@ -292,7 +294,7 @@ const ResumeListDetails = () => {
                         <div>|</div>
                         <div
                           style={{ cursor: "pointer" }}
-                          onClick={() => deleteComment(comment.c_num)}
+                          onClick={() => deleteComment(comment.commentNo)}
                         >
                           삭제
                         </div>
@@ -302,10 +304,10 @@ const ResumeListDetails = () => {
                   <div
                     style={{ fontSize: "0.8rem", color: "rgb(150,150,150)" }}
                   >
-                    {comment.w_date.slice(0, 10)}
+                    {comment.createdDate.slice(0, 10)}
                   </div>
                 </div>
-                {editId == comment.c_num ? (
+                {editId == comment.commentNo ? (
                   <div>
                     <div>
                       <TextArea
@@ -333,9 +335,9 @@ const ResumeListDetails = () => {
                       <Button
                         onClick={() => {
                           let res = axiosInstance
-                            .put(`/comments/update/${comment.c_num}`, {
-                              c_num: comment.c_num,
-                              c_content: editComment,
+                            .patch(`/comments/${comment.commentNo}`, {
+                              commentNo: comment.commentNo,
+                              content: editComment,
                             })
                             .then((res) => {
                               fetchComment(0);
@@ -353,7 +355,7 @@ const ResumeListDetails = () => {
                     </div>
                   </div>
                 ) : (
-                  <div>{comment.c_content}</div>
+                  <div>{comment.content}</div>
                 )}
               </div>
             );
@@ -379,12 +381,10 @@ const ResumeListDetails = () => {
               onClick={() => {
                 let accessToken = localStorage.getItem("access") ?? "";
                 let DecodedToken: any = jwtDecode(accessToken);
-                let u_num = DecodedToken.uNum;
                 let res = axiosInstance
                   .post(`/comments/write`, {
-                    ccontent: writeComment,
-                    rnum: resume.r_num,
-                    unum: u_num,
+                    content: writeComment,
+                    resumeBoardNo: resume.resumeBoardNo,
                   })
                   .then((res) => {
                     setWriteComment("");
@@ -425,10 +425,10 @@ const ResumeListDetails = () => {
               onClick={() => {
                 let res = axiosInstance
 
-                  .post("/board/rating", {
+                  .post(`/board/${resume.resumeBoardNo}/rating`, {
                     rating: rating,
-                    unum: DecodedToken.uNum,
-                    rnum: resume.r_num,
+                    userNo: DecodedToken.uNum,
+                    resumeBoardNo: resume.resumeBoardNo,
                   })
                   .then((res) => {
                     setOpenRateModal(false);
