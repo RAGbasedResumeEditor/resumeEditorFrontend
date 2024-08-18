@@ -11,7 +11,6 @@ const CustomFooter = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        
       }}
     >
       <span>

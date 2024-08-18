@@ -1,11 +1,9 @@
-import Avatar from "antd/es/avatar/avatar";
 import Button from "antd/es/button";
 import Divider from "antd/es/divider";
 import Form from "antd/es/form";
 import Input from "antd/es/input";
 import notification from "antd/es/notification";
 import { Link, useNavigate } from "react-router-dom";
-import CustomFooter from "../../components/footer";
 import axios from "axios";
 import React from "react";
 import { jwtDecode } from "jwt-decode";
@@ -14,7 +12,8 @@ import { setToken } from "@/store/features/token/tokenSlice";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { DecodedToken } from "@/types/globalTypes";
-import "./login.scss";
+import { CommonNavbar } from "@/components/commonNavbar";
+import { CommonFooter } from "@/components/commonFooter";
 
 const Login = () => {
   const [notify, contextHolder] = notification.useNotification();
@@ -78,59 +77,150 @@ const Login = () => {
   };
 
   return (
-    <div className="loginWrapper">
+    <div>
+      <CommonNavbar />
       {contextHolder}
-      <div className="loginInnerWrapper">
-        <div className="loginFormWrapper">
-          <div className="loginFormHeader">
-            <div>
-              <span className="welcomeMessage">돌아오신걸 환영합니다!</span>
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Form
+          onFinish={tryLogin}
+          style={{
+            marginTop: "21.5vh",
+          }}
+        >
+          <Form.Item
+            style={{
+              width: "41.667vw",
+              height: "40vh",
+              backgroundColor: "#F9FAFB",
+              borderRadius: "20px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "Pretendard-bold",
+                fontSize: "1.042vw",
+                display: "flex",
+                color: "#0FC291",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ width: "4vw", whiteSpace: "nowrap" }}>
+                <span style={{ width: "100%" }}>유저 ID</span>
+              </div>
+              <div style={{ margin: "0 1.25vw" }}>:</div>
+              <Form.Item name="username" style={{ margin: "0" }}>
+                <Input
+                  style={{
+                    border: "transparent",
+                    outline: "none",
+                    borderRadius: "5px",
+                    width: "100%",
+                    height: "5vh",
+                    padding: "1.3vh 1.042vw",
+                    fontFamily: "Pretendard-Medium",
+                  }}
+                />
+              </Form.Item>
             </div>
-            <div className="subMessage">
-              <p>오늘도 REDITOR가 최선을 다해 도와줄게요!</p>
+            <div
+              style={{
+                fontFamily: "Pretendard-bold",
+                fontSize: "1.042vw",
+                display: "flex",
+                color: "#0FC291",
+                alignItems: "center",
+                marginTop: "3vh",
+              }}
+            >
+              <div style={{ width: "4vw", whiteSpace: "nowrap" }}>
+                <span style={{ width: "100%" }}>유저 PW</span>
+              </div>
+              <div style={{ margin: "0 1.25vw" }}>:</div>
+              <Form.Item name="password" style={{ margin: "0" }}>
+                <Input
+                  type="password"
+                  style={{
+                    border: "transparent",
+                    outline: "none",
+                    borderRadius: "5px",
+                    width: "100%",
+                    height: "5vh",
+                    padding: "1.3vh 1.042vw",
+                    fontFamily: "Pretendard-Medium",
+                  }}
+                />
+              </Form.Item>
             </div>
-            <div className="linkMessage">
-              <span>더 알아보고 싶으신가요?</span>
-              <Link to="/" className="bannerLink">
-                배너로 이동하기
-              </Link>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "right",
+                fontFamily: "Pretendard-Regular",
+                color: "#888C8E",
+                marginTop: "0.781vw",
+              }}
+            >
+              <span style={{ cursor: "pointer" }}>ID 찾기</span>
+              <span style={{ margin: "0 5px" }}>|</span>
+              <span style={{ cursor: "pointer" }}>PW 찾기</span>
             </div>
-          </div>
-          <div className="loginFormInnerWrapper">
-            <div className="loginInputWrapper">
-              <Form onFinish={tryLogin}>
-                <Form.Item name="username" style={{ marginBottom: "2%" }}>
-                  <Input size="large" placeholder="아이디 입력" />
-                </Form.Item>
-                <Form.Item name="password">
-                  <Input
-                    type="password"
-                    size="large"
-                    placeholder="비밀번호 입력"
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Button htmlType="submit" className="loginButton">
-                    로그인
-                  </Button>
-                </Form.Item>
-              </Form>
-              <Divider orientation="center" className="divider">
-                또는
-              </Divider>
-              <Button
-                className="signupButton"
-                onClick={() => {
-                  navigate("/auth/signup");
-                }}
-              >
-                회원가입
-              </Button>
-            </div>
-          </div>
-        </div>
+          </Form.Item>
+          <Form.Item
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "6vh",
+            }}
+          >
+            <button
+              style={{
+                color: "white",
+                borderRadius: "10px",
+                width: "8.333vw",
+                height: "7vh",
+                border: "transparent",
+                outline: "none",
+                cursor: "pointer",
+                fontFamily: "Pretendard-Medium",
+                fontSize: "1.042vw",
+                backgroundColor: "#0FC291",
+                marginRight: "0.781vw",
+              }}
+            >
+              로그인
+            </button>
+            <button
+              onClick={() => {
+                navigate("/auth/signup");
+              }}
+              style={{
+                color: "white",
+                backgroundColor: "#B2B8C0",
+                borderRadius: "10px",
+                width: "8.333vw",
+                height: "7vh",
+                border: "transparent",
+                outline: "none",
+                fontFamily: "Pretendard-Medium",
+                fontSize: "1.042vw",
+                cursor: "pointer",
+              }}
+            >
+              회원가입
+            </button>
+          </Form.Item>
+        </Form>
       </div>
-      <CustomFooter />
+      <CommonFooter />
     </div>
   );
 };
