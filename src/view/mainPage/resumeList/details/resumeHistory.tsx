@@ -7,13 +7,13 @@ import React from "react";
 
 interface Resume {
   mode: number;
-  occupation: string;
-  r_num: number;
-  company: string;
-  r_content: string;
-  w_date: string;
+  occupationName: string;
+  resumeEditNo: number;
+  companyName: string;
+  beforeContent: string;
+  createdDate: string;
   item: string;
-  content: string;
+  afterContent: string;
 }
 
 const ResumeHistoryDetail = () => {
@@ -46,7 +46,7 @@ const ResumeHistoryDetail = () => {
         }}
       >
         <div>
-          <div>{resume.w_date}</div>
+          <div>{resume.createdDate?.slice(0, 10)}</div>
           <div
             style={{
               fontSize: "1.2rem",
@@ -54,11 +54,11 @@ const ResumeHistoryDetail = () => {
               marginBottom: "15px",
             }}
           >
-            {resume.company} {resume.occupation}
+            {resume.companyName} {resume.occupationName}
           </div>
-          <div>{resume.r_content}</div>
+          <div>{resume.beforeContent}</div>
           <div style={{ marginTop: "15px" }}>
-            글자수: {resume.r_content?.length}
+            글자수: {resume.beforeContent?.length}
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ const ResumeHistoryDetail = () => {
                 fontSize: "1rem",
               }}
             >
-              {resume.content}
+              {resume.afterContent}
             </div>
           </div>
           <div
@@ -94,7 +94,7 @@ const ResumeHistoryDetail = () => {
               marginTop: "10px",
             }}
           >
-            글자수: {resume.content?.length}
+            글자수: {resume.afterContent?.length}
           </div>
         </div>
       </div>

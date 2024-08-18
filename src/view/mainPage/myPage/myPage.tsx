@@ -19,42 +19,41 @@ interface DecodedToken {
   exp: number;
   iat: number;
   role: string;
-  uNum: number;
+  userNo: number;
   username: string;
 }
 interface UserInfo {
   age: number;
   authCode: null;
   birthDate: string;
-  company: string;
+  companyName: string;
   delDate: null;
   email: string;
   gender: string;
-  inDate: string;
+  createdDate: string;
   mode: number;
-  occupation: string;
+  occupationName: string;
   password: null;
   resumeEditCount: number;
   role: string;
   status: number;
   unum: number;
   username: string;
-  wish: string;
+  wishCompanyName: string;
 }
 interface EditRecord {
   mode: number;
-  r_num: number;
-  title: string;
-  w_date: string;
+  resumeEditNo: number;
+  resumeNo: number;
+  companyName: string;
+  occupationName: string;
+  createdDate: string;
 }
 interface Bookmark {
-  read_num: number;
-  rating: number;
-  r_num: number;
+  bookmarkNo: number;
+  resumeBoardNo: number;
   title: string;
-  w_date: string;
-  content: string;
-  rating_count: number;
+  createdDate: string;
 }
 interface RingProps {
   mode: number;
@@ -115,13 +114,13 @@ const MyPage = () => {
           age: res.data.response.age,
           email: res.data.response.email,
           gender: res.data.response.gender,
-          inDate: res.data.response.inDate.slice(0, 10),
+          createdDate: res.data.response.createdDate.slice(0, 10),
           mode: res.data.response.mode,
           birthDate: res.data.response.birthDate,
-          wish: res.data.response.wish,
+          wishCompanyName: res.data.response.wishCompanyName,
           resumeEditCount: res.data.response.resumeEditCount,
-          company: res.data.response.company,
-          occupation: res.data.response.occupation,
+          companyName: res.data.response.companyName,
+          occupationName: res.data.response.occupationName,
         });
       })
       .catch((err) => {
@@ -133,13 +132,14 @@ const MyPage = () => {
     axiosInstance
       .get(`/user/edit-list?pageNo=${pageNo - 1}`)
       .then((res) => {
-        if (res.data.response === "게시글이 없습니다.") {
+        if (res.data.response === "결과가 존재하지 않습니다") {
           setEditRecords([]);
         } else {
           let newData = res.data.response.map((data: EditRecord) => {
             return {
               ...data,
-              w_date: data.w_date.slice(0, 10),
+              w_date: data.createdDate.slice(0, 10),
+              title: data.companyName + " " + data.occupationName,
             };
           });
           setEditRecords(newData);
@@ -174,12 +174,18 @@ const MyPage = () => {
   const fetchBookmarks = (page: number) => {
     let pageNo = page;
     axiosInstance
-      .get(`/user/bookmark?pageNo=${pageNo}`)
+      .get(`/user/bookmark?pageNo=${pageNo - 1}`)
       .then((res) => {
-        if (res.data.response === "게시글이 없습니다.") {
+        if (res.data.response === "결과가 존재하지 않습니다") {
           setBookmarks([]);
         } else {
-          setBookmarks(res.data.response);
+          let newData = res.data.response.map((data: Bookmark) => {
+            return {
+              ...data,
+              createdDate: data.createdDate.slice(0, 10),
+            };
+          });
+          setBookmarks(newData);
           setTotalPages(res.data.totalPages);
         }
       })
@@ -222,7 +228,7 @@ const MyPage = () => {
           dataIndex: "title",
           key: "title",
           render: (text: string, record: EditRecord) => (
-            <a href={`/main/mypage/${record.r_num}`} style={{ color: "black" }}>
+            <a href={`/main/mypage/${record.resumeEditNo}`} style={{ color: "black" }}>
               {text}
             </a>
           ),
@@ -245,13 +251,12 @@ const MyPage = () => {
           dataIndex: "title",
           key: "title",
           render: (text: string, record: Bookmark) => (
-            <a href={`./resumelist/${record.r_num}`} style={{ color: "black" }}>
+            <a href={`./resumelist/${record.resumeBoardNo}`} style={{ color: "black" }}>
               {text}
             </a>
           ),
         },
-        { title: "Date", dataIndex: "w_date", key: "w_date" },
-        { title: "Rating", dataIndex: "rating", key: "rating" },
+        { title: "Date", dataIndex: "createdDate", key: "createdDate" },
       ];
       return (
         <Table
@@ -436,14 +441,14 @@ const MyPage = () => {
             </Form.Item>
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
-                name="wish"
+                name="wishCompanyName"
                 label={<b>목표 직무</b>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
                 <Input size="large" />
               </Form.Item>
               <Form.Item
-                name="inDate"
+                name="createdDate"
                 label={<b>가입일</b>}
                 style={{
                   width: "calc(50% - 8px)",
@@ -457,14 +462,14 @@ const MyPage = () => {
 
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
-                name="company"
+                name="companyName"
                 label={<b>회사</b>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
                 <Input size="large" />
               </Form.Item>
               <Form.Item
-                name="occupation"
+                name="occupationName"
                 label={<b>직무</b>}
                 style={{
                   width: "calc(50% - 8px)",
@@ -548,8 +553,9 @@ const MyPage = () => {
             onClick={() => {
               let accessToken = localStorage.getItem("access") ?? "";
               let Decoded: DecodedToken = jwtDecode(accessToken);
-              let uNum = Decoded.uNum;
-              axios.delete(`/user/${uNum}`).then((res) => {
+              console.log(accessToken);
+              let userNo = Decoded.userNo;
+              axios.delete(`/user`).then((res) => {
                 Swal.fire({
                   icon: "success",
                   title: "회원 탈퇴 완료",
@@ -603,7 +609,7 @@ const MyPage = () => {
 
                   .post("/board/rating", {
                     rating: rating,
-                    unum: DecodedToken.uNum,
+                    unum: DecodedToken.userNo,
                   })
                   .then((res) => {
                     setOpenRateModal(false);
