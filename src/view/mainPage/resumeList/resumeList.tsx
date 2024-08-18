@@ -11,7 +11,7 @@ import axios from "axios";
 interface ResumeList {
   resumeBoardNo: number;
   rating: number;
-  ratingCount: number;
+  ratingCount: number; 
   readCount: number;
   title: string;
   createdDate: string;
