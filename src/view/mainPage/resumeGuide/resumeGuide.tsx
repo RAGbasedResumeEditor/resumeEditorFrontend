@@ -639,7 +639,7 @@ const ResumeGuide = () => {
                   onClick={() => {
                     setIsLoading(true);
                   }}
-                  style={{ backgroundColor: "#85dad2" }}
+                  style={{ backgroundColor: "#0DC291" }}
                   type="primary"
                   htmlType="submit"
                   size="large"
@@ -699,7 +699,7 @@ const ResumeGuide = () => {
                       }}
                     >
                       <Button
-                        style={{ backgroundColor: "#85DAD2", color: "white" }}
+                        style={{ backgroundColor: "#0DC291", color: "white" }}
                         size="large"
                         onClick={() => {
                           setOpenRateModal(true);
@@ -810,7 +810,7 @@ const ResumeGuide = () => {
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
             <Button
-              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              style={{ backgroundColor: "#0DC291", color: "white" }}
               size="large"
               onClick={() => {
                 let accessToken = localStorage.getItem("access") ?? "";

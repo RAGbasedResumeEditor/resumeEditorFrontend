@@ -11,7 +11,7 @@ import axios from "axios";
 interface ResumeList {
   resumeBoardNo: number;
   rating: number;
-  ratingCount: number; 
+  ratingCount: number;
   readCount: number;
   title: string;
   createdDate: string;
@@ -45,16 +45,12 @@ const ResumeList = () => {
     setTotalPages(res.data.totalPages);
   }
 
-  async function fetchTopRatedResumes(
-    setter: (data: ResumeList[]) => void
-  ) {
+  async function fetchTopRatedResumes(setter: (data: ResumeList[]) => void) {
     let res = await axiosInstance.get("/board/list/rank/rating");
     setter(res.data.response);
   }
 
-  async function fetchTopReadResumes(
-    setter: (data: ResumeList[]) => void
-  ) {
+  async function fetchTopReadResumes(setter: (data: ResumeList[]) => void) {
     let res = await axiosInstance.get("/board/list/rank/read-count");
     setter(res.data.response);
   }
@@ -78,7 +74,7 @@ const ResumeList = () => {
       >
         <div
           style={{
-            backgroundColor: "#85dad2",
+            backgroundColor: "#0DC291",
             padding: "1px",
             borderRadius: "4px",
             textAlign: "center",
@@ -147,7 +143,7 @@ const ResumeList = () => {
 
         <div
           style={{
-            backgroundColor: "#85dad2",
+            backgroundColor: "#0DC291",
             padding: "1px",
             borderRadius: "4px",
             textAlign: "center",
@@ -298,7 +294,9 @@ const ResumeList = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <div className="contentDate">{resume.createdDate.slice(0, 10)}</div>
+                    <div className="contentDate">
+                      {resume.createdDate.slice(0, 10)}
+                    </div>
                     <div className="contentView">
                       <EyeOutlined /> {resume.readCount}
                     </div>

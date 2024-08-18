@@ -69,7 +69,7 @@ const Ring: React.FC<RingProps> = ({ mode }) => {
     width: circleDiameter,
     height: circleDiameter,
     borderRadius: "50%",
-    border: `5px solid #85DAD2`,
+    border: `5px solid #0DC291`,
     color: "black", // Text color
     fontSize: "15px", // Font size
   };
@@ -228,7 +228,10 @@ const MyPage = () => {
           dataIndex: "title",
           key: "title",
           render: (text: string, record: EditRecord) => (
-            <a href={`/main/mypage/${record.resumeEditNo}`} style={{ color: "black" }}>
+            <a
+              href={`/main/mypage/${record.resumeEditNo}`}
+              style={{ color: "black" }}
+            >
               {text}
             </a>
           ),
@@ -251,7 +254,10 @@ const MyPage = () => {
           dataIndex: "title",
           key: "title",
           render: (text: string, record: Bookmark) => (
-            <a href={`./resumelist/${record.resumeBoardNo}`} style={{ color: "black" }}>
+            <a
+              href={`./resumelist/${record.resumeBoardNo}`}
+              style={{ color: "black" }}
+            >
               {text}
             </a>
           ),
@@ -344,7 +350,7 @@ const MyPage = () => {
               onClick={() => setOpenRateModal(true)}
               style={{
                 marginTop: "10px",
-                backgroundColor: "#85DAD2",
+                backgroundColor: "#0DC291",
                 color: "white",
                 fontWeight: "bold",
               }}
@@ -515,7 +521,7 @@ const MyPage = () => {
                   htmlType="submit"
                   size="large"
                   style={{
-                    backgroundColor: "#85DAD2",
+                    backgroundColor: "#0DC291",
                     color: "white",
                     fontWeight: "bold",
                   }}
@@ -600,7 +606,7 @@ const MyPage = () => {
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
             <Button
-              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              style={{ backgroundColor: "#0DC291", color: "white" }}
               size="large"
               onClick={() => {
                 let accessToken = localStorage.getItem("access") ?? "";

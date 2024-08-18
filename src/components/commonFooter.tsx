@@ -2,7 +2,7 @@ import React from "react";
 
 export const CommonFooter = () => {
   return (
-    <div
+    <footer
       style={{
         backgroundColor: "#F9FAFB",
         height: "50vh",
@@ -98,6 +98,6 @@ export const CommonFooter = () => {
         <span>개인정보 처리방침 | 이용약관 | 사업자정보확인 </span>
         <span>ⒸREDITOR</span>
       </div>
-    </div>
+    </footer>
   );
 };

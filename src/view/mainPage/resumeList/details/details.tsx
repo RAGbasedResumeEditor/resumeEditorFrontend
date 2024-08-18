@@ -68,7 +68,7 @@ const ResumeListDetails = () => {
   };
   const accessToken = localStorage.getItem("access") ?? "";
   const DecodedToken: DecodedToken = jwtDecode(accessToken);
-  
+
   const userInfo = DecodedToken.username;
   const userRole = DecodedToken.role;
   const param = useParams();
@@ -109,8 +109,7 @@ const ResumeListDetails = () => {
 
       onOk() {
         let res = axiosInstance
-          .delete(`/comments/${commentNo}`, {
-          })
+          .delete(`/comments/${commentNo}`, {})
           .then((res) => {
             fetchComment(0);
           })
@@ -122,13 +121,15 @@ const ResumeListDetails = () => {
   };
 
   const fetchLiked = () => {
-    let res = axiosInstance.get(`/board/${param.id}/bookmark/exist`).then((res) => {
-      if (res.data.response == false) {
-        setStarClicked(false);
-      } else {
-        setStarClicked(true);
-      }
-    });
+    let res = axiosInstance
+      .get(`/board/${param.id}/bookmark/exist`)
+      .then((res) => {
+        if (res.data.response == false) {
+          setStarClicked(false);
+        } else {
+          setStarClicked(true);
+        }
+      });
   };
 
   const fetchRated = () => {
@@ -392,7 +393,7 @@ const ResumeListDetails = () => {
                   });
               }}
               style={{
-                backgroundColor: "#82D6CE",
+                backgroundColor: "#0DC291",
                 color: "white",
                 fontWeight: "bold",
               }}
@@ -420,7 +421,7 @@ const ResumeListDetails = () => {
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
             <Button
-              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              style={{ backgroundColor: "#0DC291", color: "white" }}
               size="large"
               onClick={() => {
                 let res = axiosInstance

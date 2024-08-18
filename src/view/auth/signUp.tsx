@@ -7,7 +7,6 @@ import Radio from "antd/es/radio";
 import Select from "antd/es/select";
 import Modal from "antd/es/modal";
 import { Link, useNavigate } from "react-router-dom";
-import CustomFooter from "../../components/footer";
 import { ChangeEvent, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -20,6 +19,7 @@ import "./signUp.scss";
 import { ServiceAgreement } from "./serviceAgreement";
 import { PrivateInfoAgreement } from "./privateInfoAgreement";
 import { Checkbox } from "antd";
+import { CommonFooter } from "@/components/commonFooter";
 
 const SignUp = () => {
   let [submitForm] = useForm();
@@ -499,7 +499,7 @@ const SignUp = () => {
                         size="large"
                         style={{
                           width: "100%",
-                          backgroundColor: "#85dad2",
+                          backgroundColor: "#0DC291",
                           color: "white",
                         }}
                         disabled={isModalVisible}
@@ -616,7 +616,7 @@ const SignUp = () => {
           </p>
         </Modal>
       </div>
-      <CustomFooter />
+      <CommonFooter />
     </div>
   );
 };
