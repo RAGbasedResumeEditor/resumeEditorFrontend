@@ -262,7 +262,7 @@ const ResumeListDetails = () => {
               <div
                 key={`comment${idx}`}
                 style={{
-                  width: "95%",
+                  width: "25vw",
                   border: "1px solid rgb(220,220,220)",
                   padding: "2% 3%",
                 }}
@@ -281,7 +281,7 @@ const ResumeListDetails = () => {
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          width: "15%",
+                          width: "5vw",
                           fontSize: "0.8rem",
                           color: "rgb(200,200,200)",
                         }}
@@ -346,7 +346,7 @@ const ResumeListDetails = () => {
                             });
                         }}
                         style={{
-                          backgroundColor: "#82D6CE",
+                          backgroundColor: "#0dc291",
                           color: "white",
                           fontWeight: "bold",
                         }}
