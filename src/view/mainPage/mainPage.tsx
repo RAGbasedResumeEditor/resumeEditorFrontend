@@ -2,6 +2,7 @@ import React, { lazy } from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Navbar from "@/components/navbar/navbar";
 import "./mainPage.scss";
+import GuideHistoryDetail from "./resumeList/details/guideHistory";
 import { CommonFooter } from "@/components/commonFooter";
 
 // Lazy load nested components
@@ -30,6 +31,7 @@ const MainPage = () => {
           <Route path="resumelist" element={<ResumeList />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypage/:id" element={<ResumeHistoryDetail />} />
+          <Route path="mypage/guide/:id" element={<GuideHistoryDetail />} />
           <Route path="faq" element={<FAQ />} />
         </Routes>
       </div>
