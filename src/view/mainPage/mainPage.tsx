@@ -1,9 +1,9 @@
-import React, {lazy } from "react";
+import React, { lazy } from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
-import CustomFooter from "../../components/footer";
 import Navbar from "@/components/navbar/navbar";
 import "./mainPage.scss";
 import GuideHistoryDetail from "./resumeList/details/guideHistory";
+import { CommonFooter } from "@/components/commonFooter";
 
 // Lazy load nested components
 const ResumeEdit = lazy(() => import("./resumeEdit/resumeEdit"));
@@ -35,7 +35,7 @@ const MainPage = () => {
           <Route path="faq" element={<FAQ />} />
         </Routes>
       </div>
-      <CustomFooter />
+      <CommonFooter />
       <Outlet />
     </div>
   );

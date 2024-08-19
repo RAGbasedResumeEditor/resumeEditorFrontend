@@ -454,7 +454,7 @@ const Recommendation = () => {
 
               <Form.Item style={{ textAlign: "center", marginTop: "40px" }}>
                 <Button
-                  style={{ backgroundColor: "#85dad2" }}
+                  style={{ backgroundColor: "#0DC291" }}
                   type="primary"
                   htmlType="submit"
                   size="large"

@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import "./navbar.css";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -35,45 +34,154 @@ const Navbar = () => {
   }, []);
   return (
     <div>
-      <nav className="navbar">
+      <nav
+        className="navbar"
+        style={{
+          height: "8vh",
+          display: "flex",
+          backgroundColor: "#0DC291",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 10.938vw",
+          textDecoration: "none",
+        }}
+      >
         <div className="navbar_logo">
           {accessToken == "" ? (
-            <Link to="/">Reditor</Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-bold",
+                fontSize: "1.8vw",
+                cursor: "pointer",
+              }}
+              to="/"
+            >
+              REDITOR
+            </Link>
           ) : (
-            <Link to="/main/resume">Reditor</Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-bold",
+                fontSize: "1.8vw",
+                cursor: "pointer",
+              }}
+              to="/main/resume"
+            >
+              REDITOR
+            </Link>
           )}
         </div>
 
-        <ul className="navbar_menu">
-          <li>
-            <Link to="/main/resumeguide">자소서 가이드</Link>
+        <ul
+          className="navbar_menu"
+          style={{
+            listStyle: "none",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "34vw",
+            fontFamily: "Pretendard-Medium",
+            marginLeft: "7vw",
+            fontSize: "1.042vw",
+          }}
+        >
+          <li style={{ textDecoration: "none" }}>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-Medium",
+              }}
+              to="/main/resumeguide"
+            >
+              자소서 가이드
+            </Link>
           </li>
           <li>
-            <Link to="/main/resume">자소서 첨삭</Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-Medium",
+              }}
+              to="/main/resume"
+            >
+              자소서 첨삭
+            </Link>
           </li>
           <li>
-            <Link to="/main/recommendation">맞춤 일자리</Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-Medium",
+              }}
+              to="/main/recommendation"
+            >
+              맞춤 일자리
+            </Link>
           </li>
           <li>
-            <Link to="/main/resumelist">자소서 목록</Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-Medium",
+              }}
+              to="/main/resumelist"
+            >
+              자소서 목록
+            </Link>
           </li>
+
           <li>
-            <Link to="/main/mypage">마이페이지</Link>
-          </li>
-          <li>
-            <Link to="/main/faq">FAQ</Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontFamily: "Pretendard-Medium",
+              }}
+              to="/main/faq"
+            >
+              FAQ
+            </Link>
           </li>
         </ul>
         {user == true ? (
-          <ul className="navbar_links" style={{ alignItems: "center" }}>
+          <ul
+            className="navbar_links"
+            style={{
+              listStyle: "none",
+              display: "flex",
+              color: "white",
+              fontWeight: "Pretendard-Medium",
+              justifyContent: "space-between",
+              width: "17vw",
+              fontSize: "1.042vw",
+            }}
+          >
             <li>{username} 님</li>
             <li>
-              <Button
+              <Link
+                style={{
+                  textDecoration: "none",
+                  color: "white",
+                  fontFamily: "Pretendard-Medium",
+                }}
+                to="/main/mypage"
+              >
+                MY
+              </Link>
+            </li>
+            <li>
+              <div
                 style={{
                   backgroundColor: "transparent",
-                  border: "1px solid white",
                   color: "white",
-                  fontWeight: "bold",
+                  cursor: "pointer",
                 }}
                 onClick={() => {
                   let refreshToken = localStorage.getItem("refresh");
@@ -97,7 +205,7 @@ const Navbar = () => {
                 }}
               >
                 로그아웃
-              </Button>
+              </div>
             </li>
           </ul>
         ) : (

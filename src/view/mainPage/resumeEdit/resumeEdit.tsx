@@ -308,7 +308,7 @@ const ResumeEdit = () => {
                   }}
                   style={
                     switchSelected
-                      ? { backgroundColor: "#85DAD2" }
+                      ? { backgroundColor: "#0DC291" }
                       : { backgroundColor: "rgb(220,220,220)" }
                   }
                 />
@@ -412,7 +412,7 @@ const ResumeEdit = () => {
                   setIsLoading(true);
                 }}
                 style={{
-                  backgroundColor: "#85DAD2",
+                  backgroundColor: "#0DC291",
                   color: "white",
                   fontWeight: "bold",
                 }}
@@ -484,7 +484,7 @@ const ResumeEdit = () => {
                         type="primary"
                         onClick={() => setShowDiff(true)}
                         style={{
-                          backgroundColor: "#85DAD2",
+                          backgroundColor: "#0DC291",
                           color: "white",
                           fontWeight: "bold",
                           marginTop: "10px",
@@ -497,7 +497,7 @@ const ResumeEdit = () => {
                         onClick={() => setOpenRateModal(true)}
                         style={{
                           marginLeft: "20px",
-                          backgroundColor: "#85DAD2",
+                          backgroundColor: "#0DC291",
                           color: "white",
                           fontWeight: "bold",
                           marginTop: "10px",
@@ -521,7 +521,7 @@ const ResumeEdit = () => {
                         type="primary"
                         onClick={() => setShowDiff(false)}
                         style={{
-                          backgroundColor: "#85DAD2",
+                          backgroundColor: "#0DC291",
                           color: "white",
                           fontWeight: "bold",
                           marginTop: "10px",
@@ -568,7 +568,7 @@ const ResumeEdit = () => {
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
             <Button
-              style={{ backgroundColor: "#85DAD2", color: "white" }}
+              style={{ backgroundColor: "#0DC291", color: "white" }}
               size="large"
               onClick={() => {
                 let accessToken = localStorage.getItem("access") ?? "";
