@@ -55,6 +55,11 @@ interface Bookmark {
   title: string;
   createdDate: string;
 }
+interface GuideRecord {
+  resumeGuideNo: number;
+  companyName: number;
+  occupationName: string;
+}
 interface RingProps {
   mode: number;
 }
@@ -81,6 +86,7 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState<string>("editHistory");
   const [editRecords, setEditRecords] = useState<EditRecord[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [guideRecords, setGuideRecords] = useState<GuideRecord[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [bookmarkClicked, setBookmarkClicked] = useState<boolean>(false);
@@ -151,6 +157,29 @@ const MyPage = () => {
         setEditRecords([]);
       });
   };
+  const fetchGuideRecords = (page: number) => {
+    let pageNo = page;
+    axiosInstance
+      .get(`/user/guide-list?pageNo=${pageNo - 1}`)
+      .then((res) => {
+        if (res.data.response === "결과가 존재하지 않습니다") {
+          setGuideRecords([]);
+        } else {
+          let newData = res.data.response.map((data: GuideRecord) => {
+            return {
+              ...data,
+              title: data.companyName + " " + data.occupationName,
+            };
+          });
+          setGuideRecords(newData);
+          setTotalPages(res.data.totalPages);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setEditRecords([]);
+      });
+  };
 
   const onEdit = ({ email, age, birthDate, wish, company, occupation }) => {
     let res = axiosInstance
@@ -200,8 +229,10 @@ const MyPage = () => {
   useEffect(() => {
     if (activeTab === "editHistory") {
       fetchEditRecords(currentPage);
-    } else {
+    } else if(activeTab === "bookmark"){
       fetchBookmarks(currentPage);
+    } else{
+      fetchGuideRecords(currentPage);
     }
   }, [activeTab, currentPage]);
   const renderMode = (mode: number) => {
@@ -244,7 +275,7 @@ const MyPage = () => {
           locale={{ emptyText: "게시글이 없습니다." }}
         />
       );
-    } else {
+    } else if(activeTab === "bookmark") {
       const columns = [
         {
           title: "Title",
@@ -261,6 +292,28 @@ const MyPage = () => {
       return (
         <Table
           dataSource={bookmarks.length > 0 ? bookmarks : []}
+          columns={columns}
+          pagination={false}
+          rowKey="r_num"
+          locale={{ emptyText: "게시글이 없습니다." }}
+        />
+      );
+    } else {
+      const columns = [
+        {
+          title: "Title",
+          dataIndex: "title",
+          key: "title",
+          render: (text: string, record: GuideRecord) => (
+            <a href={`/main/mypage/guide/${record.resumeGuideNo}`} style={{ color: "black" }}>
+              {text}
+            </a>
+          ),
+        },
+      ];
+      return (
+        <Table
+          dataSource={guideRecords.length > 0 ? guideRecords : []}
           columns={columns}
           pagination={false}
           rowKey="r_num"

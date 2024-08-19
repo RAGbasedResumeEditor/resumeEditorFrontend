@@ -3,6 +3,7 @@ import { Outlet, Route, Routes } from "react-router-dom";
 import CustomFooter from "../../components/footer";
 import Navbar from "@/components/navbar/navbar";
 import "./mainPage.scss";
+import GuideHistoryDetail from "./resumeList/details/guideHistory";
 
 // Lazy load nested components
 const ResumeEdit = lazy(() => import("./resumeEdit/resumeEdit"));
@@ -30,6 +31,7 @@ const MainPage = () => {
           <Route path="resumelist" element={<ResumeList />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypage/:id" element={<ResumeHistoryDetail />} />
+          <Route path="mypage/guide/:id" element={<GuideHistoryDetail />} />
           <Route path="faq" element={<FAQ />} />
         </Routes>
       </div>
