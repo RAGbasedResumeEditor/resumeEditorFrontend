@@ -7,7 +7,7 @@ import React from "react";
 
 interface Guide {
   resumeGuideNo: number;
-  occupationName: string;
+  occupationName: string; 
   companyName: string;
   content: string;
 }
