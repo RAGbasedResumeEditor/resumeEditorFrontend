@@ -10,7 +10,7 @@
   <p>이제는 Reditor가 20000여개의 자기소개서 데이터를 바탕으로 여러분의 경험을 빛내 드리겠습니다.</p>
   <p><a href="https://reditor.me">Reditor 사용해보기</a></p>
 </div>
-</br>
+</br> 
 </br>
 
 # 목차
