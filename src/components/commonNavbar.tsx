@@ -20,6 +20,10 @@ export const CommonNavbar = () => {
           fontSize: "1.8vw",
           color: "white",
           fontFamily: "Pretendard-Medium",
+          cursor: "pointer",
+        }}
+        onClick={() => {
+          navigate("/");
         }}
       >
         REDITOR
