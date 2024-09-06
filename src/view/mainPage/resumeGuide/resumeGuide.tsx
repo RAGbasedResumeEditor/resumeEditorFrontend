@@ -45,6 +45,8 @@ const ResumeGuide = () => {
   const [occupationSearchError, setOccupationSearchError] = useState('');
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [companyNo, setCompanyNo] = useState(null);
+  const [occupationNo, setOccupationNo] = useState(null);
 
   const handleClick = (value) => {
     let num = parseFloat(value);
@@ -65,10 +67,10 @@ const ResumeGuide = () => {
     const uNum = decodedToken.uNum;
 
     axiosInstance
-      .get(`/resume-guide/load/${uNum}`)
+      .get(`/guide`)
       .then((res) => {
-        if (res.data.status === 'Success') {
-          const { awards, experiences } = res.data;
+        if (res.data.status === 'success') {
+          const { awards, experiences } = res.data.response;
           if (awards) {
             const formattedAwards = awards.split('\n').map((award, index) => ({
               value: award,
@@ -167,15 +169,15 @@ const ResumeGuide = () => {
     return spinner[randomIndex];
   };
 
-  const onFinish = ({ status, company, occupation }) => {
+  const onFinish = ({ status, companyName, occupationName }) => {
     const questions = questionList.filter((q) => q.value.trim() !== '');
     const awards = awardList.filter((a) => a.value.trim() !== '');
     const experiences = experienceList.filter((e) => e.value.trim() !== '');
 
     if (
       status === undefined ||
-      company === undefined ||
-      occupation === undefined
+      companyName === undefined ||
+      occupationName === undefined
     ) {
       Swal.fire({
         icon: 'error',
@@ -222,7 +224,7 @@ const ResumeGuide = () => {
 
     axiosInstance
       .post(
-        '/resume-guide/upload',
+        '/guide',
         {
           uNum,
           awards: awards.map((a) => a.value).join('\n'), // 배열을 문자열로 변환하여 전송
@@ -240,8 +242,8 @@ const ResumeGuide = () => {
             '/gpt/resume-guide',
             {
               status: status,
-              company: company,
-              occupation: occupation,
+              company: companyName,
+              occupation: occupationName,
               questions: formattedQuestions,
               awards: formattedAwards,
               experiences: formattedExperiences,
@@ -255,12 +257,35 @@ const ResumeGuide = () => {
             if (res.data.status === 'Success') {
               setIsLoading(false);
               setResult(res.data.result);
+
+              // 여기서 추가적인 POST 요청을 보냅니다.
+              axiosInstance
+              .post('/resume/guide', {
+                // someKey: someValue, // 원하는 데이터를 여기에 추가
+                companyNo: companyNo,
+                occupationNo: occupationNo,
+                content: res.data.result
+              })
+              .then((anotherRes) => {
+                // 추가 POST 요청이 성공했을 때의 처리
+                console.log('Additional POST request successful', anotherRes);
+              })
+              .catch((anotherErr) => {
+                // 추가 POST 요청이 실패했을 때의 처리
+                console.error('Additional POST request failed', anotherErr);
+                console.log(companyNo, occupationNo);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Failed to complete additional request.',
+                });
+              });
             }
           })
           .catch((err) => {
             console.log(
-              company,
-              occupation,
+              companyName,
+              occupationName,
               questions,
               formattedAwards,
               formattedExperiences
@@ -334,11 +359,16 @@ const ResumeGuide = () => {
     setSearchError('');
 
     try {
-      const response = await axiosInstance.get(`/resume-items/load/${value}`);
-      if (response.data.status === 'Not found') {
+      const response = await axiosInstance.get("/company/search", {
+        params: {
+          keyword: value,
+        },
+      });
+      console.log(response);
+      if (response.data.response === null) {
         setSearchError('Not found');
       } else if (response.data.status === 'Success') {
-        setSearchResults(response.data.itemsList);
+        setSearchResults(response.data.response);
       }
     } catch (error) {
       setSearchError('Failed to search');
@@ -348,9 +378,10 @@ const ResumeGuide = () => {
   };
 
   const handleRowClick = (record) => {
-    const { company, items } = record;
-    const itemList = items.split('||');
-    userInputForm.setFieldsValue({ company });
+    const { companyName, companyNo, questions } = record; // companyNo 추가
+    const itemList = questions.split('||');
+    userInputForm.setFieldsValue({ companyName });
+    setCompanyNo(companyNo);  // companyNo 설정
     setQuestionList(
       itemList.map((item, index) => ({
         value: item,
@@ -376,13 +407,15 @@ const ResumeGuide = () => {
     setOccupationSearchError('');
 
     try {
-      const response = await axiosInstance.get(
-        `/resume-occupation/load/${value}`
-      );
-      if (response.data.status === 'Not found') {
+      const response = await axiosInstance.get("/occupation/search", {
+        params: {
+          keyword: value,
+        },
+      });
+      if (response.data.response === null) {
         setOccupationSearchError('Not found');
       } else if (response.data.status === 'Success') {
-        setOccupationSearchResults(response.data.occupationList);
+        setOccupationSearchResults(response.data.response);
       }
     } catch (error) {
       setOccupationSearchError('Failed to search');
@@ -392,9 +425,11 @@ const ResumeGuide = () => {
   };
 
   const handleOccupationRowClick = (record) => {
-    const { occupation } = record;
-    userInputForm.setFieldsValue({ occupation });
+    const { occupationName, occupationNo } = record; // occupationNo 추가
+    userInputForm.setFieldsValue({ occupationName });
+    setOccupationNo(occupationNo);  // occupationNo 설정
     closeOccupationSearchModal();
+    console.log(occupationNo);
   };
 
   const handleInputChange = (e, index, list, setList) => {
@@ -416,20 +451,20 @@ const ResumeGuide = () => {
   const occupationColumns = [
     {
       title: 'Occupation',
-      dataIndex: 'occupation',
-      key: 'occupation',
+      dataIndex: 'occupationName',
+      key: 'occupationName',
     },
   ];
   const columns = [
     {
       title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      dataIndex: 'companyName',
+      key: 'companyName',
     },
     {
       title: 'Items',
-      dataIndex: 'items',
-      key: 'items',
+      dataIndex: 'questions',
+      key: 'questions',
     },
   ];
   return (
@@ -479,7 +514,7 @@ const ResumeGuide = () => {
 
               <Form.Item style={{ marginBottom: 0 }}>
                 <Form.Item
-                  name="company"
+                  name="companyName"
                   label={<b>지원 회사</b>}
                   style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
                 >
@@ -496,7 +531,7 @@ const ResumeGuide = () => {
                 </Form.Item>
                 <Form.Item
                   label={<b>지원 직무</b>}
-                  name="occupation"
+                  name="occupationName"
                   style={{
                     display: 'inline-block',
                     width: 'calc(50% - 8px)',
@@ -742,7 +777,7 @@ const ResumeGuide = () => {
           <Table
             columns={columns}
             dataSource={searchResults}
-            rowKey="company"
+            rowKey="companyNo"
             onRow={(record) => ({
               onClick: () => handleRowClick(record),
             })}
@@ -775,7 +810,7 @@ const ResumeGuide = () => {
           <Table
             columns={occupationColumns}
             dataSource={occupationSearchResults}
-            rowKey="occupation"
+            rowKey="occupationNo"
             onRow={(record) => ({
               onClick: () => handleOccupationRowClick(record),
             })}
