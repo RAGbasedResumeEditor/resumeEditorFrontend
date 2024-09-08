@@ -80,6 +80,34 @@ const Ring: React.FC<RingProps> = ({ mode }) => {
   };
   return <div style={ringStyle}>{text}</div>;
 };
+
+const labelStyle = {
+  fontFamily: "Pretendard-Medium",
+  fontSize: "20px",
+  color: "#0FC291",
+};
+
+const CustomFormItem = ({
+  name,
+  disabled = true,
+}: {
+  name: string;
+  disabled: boolean;
+}) => {
+  return (
+    <Form.Item
+      name={name}
+      style={{
+        display: "flex",
+        justifyContent: "right",
+        width: "90%",
+        marginBottom: "0",
+      }}
+    >
+      <Input size="large" disabled={disabled} />
+    </Form.Item>
+  );
+};
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState<Partial<UserInfo>>({});
   const [userForm] = useForm();
@@ -229,9 +257,9 @@ const MyPage = () => {
   useEffect(() => {
     if (activeTab === "editHistory") {
       fetchEditRecords(currentPage);
-    } else if(activeTab === "bookmark"){
+    } else if (activeTab === "bookmark") {
       fetchBookmarks(currentPage);
-    } else{
+    } else {
       fetchGuideRecords(currentPage);
     }
   }, [activeTab, currentPage]);
@@ -253,21 +281,58 @@ const MyPage = () => {
   const renderTable = () => {
     if (activeTab === "editHistory") {
       const columns = [
-        { title: "Mode", dataIndex: "mode", key: "mode", render: renderMode },
         {
-          title: "Title",
+          title: <div style={{ fontFamily: "Pretendard-bold" }}>Mode</div>,
+          dataIndex: "mode",
+          key: "mode",
+          render: (text: number) => (
+            <div style={{ fontFamily: "Pretendard-regular" }}>
+              {renderMode(text)}
+            </div>
+          ),
+        },
+        {
+          title: (
+            <div style={{ fontFamily: "Pretendard-bold", textAlign: "center" }}>
+              Title
+            </div>
+          ),
           dataIndex: "title",
           key: "title",
           render: (text: string, record: EditRecord) => (
-            <a
-              href={`/main/mypage/${record.resumeEditNo}`}
-              style={{ color: "black" }}
+            <div
+              style={{
+                fontFamily: "Pretendard-regular",
+                textAlign: "center",
+                width: "100%",
+                textDecoration: "none",
+              }}
             >
-              {text}
-            </a>
+              <a
+                style={{ color: "black" }}
+                href={`/main/mypage/${record.resumeEditNo}`}
+              >
+                {text}
+              </a>
+            </div>
           ),
         },
-        { title: "Date", dataIndex: "w_date", key: "w_date" },
+        {
+          title: (
+            <div style={{ fontFamily: "Pretendard-bold", textAlign: "center" }}>
+              Date
+            </div>
+          ),
+          dataIndex: "w_date",
+          key: "w_date",
+          render: (text: string) => (
+            <div
+              style={{ fontFamily: "Pretendard-regular", textAlign: "center" }}
+            >
+              {text}
+            </div>
+          ),
+        },
       ];
       return (
         <Table
@@ -278,7 +343,7 @@ const MyPage = () => {
           locale={{ emptyText: "게시글이 없습니다." }}
         />
       );
-    } else if(activeTab === "bookmark") {
+    } else if (activeTab === "bookmark") {
       const columns = [
         {
           title: "Title",
@@ -311,7 +376,10 @@ const MyPage = () => {
           dataIndex: "title",
           key: "title",
           render: (text: string, record: GuideRecord) => (
-            <a href={`/main/mypage/guide/${record.resumeGuideNo}`} style={{ color: "black" }}>
+            <a
+              href={`/main/mypage/guide/${record.resumeGuideNo}`}
+              style={{ color: "black" }}
+            >
               {text}
             </a>
           ),
@@ -331,7 +399,7 @@ const MyPage = () => {
   return (
     <div
       className="mypageWrapper"
-      style={{ padding: "3% 10%", display: "flex", width: "80%" }}
+      style={{ padding: "3% 10%", display: "flex", width: "100%" }}
     >
       <div className="mypageLeft" style={{ width: "50%", paddingRight: "2%" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -450,10 +518,10 @@ const MyPage = () => {
       <div
         className="mypageRight"
         style={{
-          width: "60%",
-          border: "1px solid rgb(220,220,220)",
+          width: "100%",
           padding: "5%",
-          borderRadius: "5px",
+          borderRadius: "20px",
+          backgroundColor: "#F9FAFB",
         }}
       >
         <div className="myPageContentWrapper">
@@ -461,102 +529,99 @@ const MyPage = () => {
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
                 name="username"
-                label={<b>유저ID</b>}
+                label={<div style={labelStyle}>유저ID</div>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
-                <Input size="large" disabled />
+                <CustomFormItem name="username" disabled />
               </Form.Item>
               <Form.Item
                 name="email"
-                label={<b>이메일</b>}
+                label={<div style={labelStyle}>이메일</div>}
                 style={{
                   width: "calc(50% - 8px)",
                   display: "inline-block",
                   marginLeft: "8px",
                 }}
               >
-                <Input size="large" disabled />
+                <CustomFormItem name="email" disabled />
               </Form.Item>
             </Form.Item>
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
                 name="age"
-                label={<b>나이</b>}
+                label={<div style={labelStyle}>나이</div>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
-                <Input size="large" disabled />
+                <CustomFormItem name="age" disabled />
               </Form.Item>
               <Form.Item
                 name="birthDate"
-                label={<b>생년월일</b>}
+                label={<div style={labelStyle}>생년월일</div>}
                 style={{
                   width: "calc(50% - 8px)",
                   display: "inline-block",
                   marginLeft: "8px",
                 }}
               >
-                <Input size="large" disabled />
+                <CustomFormItem name="birthDate" disabled />
               </Form.Item>
             </Form.Item>
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
                 name="wishCompanyName"
-                label={<b>목표 직무</b>}
+                label={<div style={labelStyle}>목표 직무</div>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
-                <Input size="large" />
+                <CustomFormItem name="wishCompanyName" disabled={false} />
               </Form.Item>
               <Form.Item
-                name="createdDate"
-                label={<b>가입일</b>}
+                label={<div style={labelStyle}>가입일</div>}
                 style={{
                   width: "calc(50% - 8px)",
                   display: "inline-block",
                   marginLeft: "8px",
                 }}
               >
-                <Input size="large" disabled />
+                <CustomFormItem name="createdDate" disabled={true} />
               </Form.Item>
             </Form.Item>
 
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
-                name="companyName"
-                label={<b>회사</b>}
+                label={<div style={labelStyle}>회사</div>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
-                <Input size="large" />
+                <CustomFormItem name="companyName" disabled={true} />
               </Form.Item>
               <Form.Item
-                name="occupationName"
-                label={<b>직무</b>}
+                label={<div style={labelStyle}>직무</div>}
                 style={{
                   width: "calc(50% - 8px)",
                   display: "inline-block",
                   marginLeft: "8px",
                 }}
               >
-                <Input size="large" />
+                <CustomFormItem name="occupationName" disabled={true} />
               </Form.Item>
             </Form.Item>
             <Form.Item style={{ width: "100%", marginBottom: "0" }}>
               <Form.Item
                 name="gender"
-                label={<b>성별</b>}
+                label={<div style={labelStyle}>성별</div>}
                 style={{ width: "calc(50% - 8px)", display: "inline-block" }}
               >
                 <Input size="large" disabled />
               </Form.Item>
               <Form.Item
                 name="resumeEditCount"
-                label={<b>첨삭한 자소서수</b>}
+                label={<div style={labelStyle}>첨삭한 자소서수</div>}
                 style={{
                   width: "calc(50% - 8px)",
                   display: "inline-block",
                   marginLeft: "8px",
                 }}
               >
-                <Input size="large" disabled />
+                <CustomFormItem name="resumeEditCount" disabled={true} />
               </Form.Item>
             </Form.Item>
             <Form.Item>
