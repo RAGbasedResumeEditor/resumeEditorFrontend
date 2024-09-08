@@ -119,18 +119,6 @@ const Navbar = () => {
                 color: "white",
                 fontFamily: "Pretendard-Medium",
               }}
-              to="/main/recommendation"
-            >
-              맞춤 일자리
-            </Link>
-          </li>
-          <li>
-            <Link
-              style={{
-                textDecoration: "none",
-                color: "white",
-                fontFamily: "Pretendard-Medium",
-              }}
               to="/main/resumelist"
             >
               자소서 목록
