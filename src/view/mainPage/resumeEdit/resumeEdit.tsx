@@ -190,24 +190,64 @@ const ResumeEdit = () => {
           withCredentials: true,
         }
       )
+      // .then((res) => {
+      //   setIsLoading(false);
+      //   setResult(res.data.result);
+      //   setDiffResult(res.data.diff); // 추가
+      //   let accessToken = localStorage.getItem('access') ?? '';
+      //   let DecodedToken: DecodedToken = jwtDecode(accessToken);
+      //   let saveData = axiosInstance
+      //     .post('/resume-edit', {
+      //       companyName: company, // companyName
+      //       occupation: occupation, // occupationName
+      //       item: question,
+      //       mode: mode,
+      //       u_num: DecodedToken.uNum,
+      //       beforeContent: answer,
+      //       atfetContent: res.data.result,
+      //     })
+      //     .then((res) => {
+      //       console.log(res);
+      //     });
+      // })
       .then((res) => {
         setIsLoading(false);
         setResult(res.data.result);
         setDiffResult(res.data.diff); // 추가
         let accessToken = localStorage.getItem('access') ?? '';
         let DecodedToken: DecodedToken = jwtDecode(accessToken);
-        let saveData = axiosInstance
-          .post('/resume-edit/upload', {
-            company: company,
-            occupation: occupation,
-            item: question,
-            r_content: answer,
-            mode: mode,
-            u_num: DecodedToken.uNum,
-            content: res.data.result,
+      
+        // /resume-list에 GET 요청을 보낼 때 company 값을 쿼리 파라미터로 전송
+        axiosInstance.get(`/resume-edit/search`, {
+            params: {
+              companyName: company, // company 값 전송
+              occupationName: occupation
+            }
           })
-          .then((res) => {
-            console.log(res);
+          .then((resumeListRes) => {
+            // /resume-list 응답에서 companyNo를 추출
+            const companyNo = resumeListRes.data.companyNo;
+            const occupationNo = resumeListRes.data.occupationNo;
+
+            // /resume-edit 요청을 보냄, companyNo 추가
+            let saveData = axiosInstance
+              .post('/resume-edit', {
+                companyNo: companyNo,
+                occupationNo: occupationNo,
+                companyName: company, // companyName
+                occupationName: occupation, // occupationName
+                // item: question,
+                question: question,
+                mode: mode,
+                beforeContent: answer,
+                afterContent: res.data.result,
+              })
+              .then((res) => {
+                console.log(res);
+              });
+          })
+          .catch((error) => {
+            console.error('Error fetching resume list:', error);
           });
       })
       .catch((err) => {
