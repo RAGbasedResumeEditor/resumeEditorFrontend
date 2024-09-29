@@ -96,11 +96,11 @@ const ResumeGuide = () => {
         }
       })
       .catch((err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Network Error',
-          text: 'Failed to connect to the server. Please try again later.',
-        });
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Network Error',
+        //   text: 'Failed to connect to the server. Please try again later.',
+        // });
       });
   }, []);
 
@@ -260,26 +260,26 @@ const ResumeGuide = () => {
 
               // 여기서 추가적인 POST 요청을 보냅니다.
               axiosInstance
-              .post('/resume/guide', {
-                // someKey: someValue, // 원하는 데이터를 여기에 추가
-                companyNo: companyNo,
-                occupationNo: occupationNo,
-                content: res.data.result
-              })
-              .then((anotherRes) => {
-                // 추가 POST 요청이 성공했을 때의 처리
-                console.log('Additional POST request successful', anotherRes);
-              })
-              .catch((anotherErr) => {
-                // 추가 POST 요청이 실패했을 때의 처리
-                console.error('Additional POST request failed', anotherErr);
-                console.log(companyNo, occupationNo);
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'Failed to complete additional request.',
+                .post('/resume/guide', {
+                  // someKey: someValue, // 원하는 데이터를 여기에 추가
+                  companyNo: companyNo,
+                  occupationNo: occupationNo,
+                  content: res.data.result,
+                })
+                .then((anotherRes) => {
+                  // 추가 POST 요청이 성공했을 때의 처리
+                  console.log('Additional POST request successful', anotherRes);
+                })
+                .catch((anotherErr) => {
+                  // 추가 POST 요청이 실패했을 때의 처리
+                  console.error('Additional POST request failed', anotherErr);
+                  console.log(companyNo, occupationNo);
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to complete additional request.',
+                  });
                 });
-              });
             }
           })
           .catch((err) => {
@@ -359,7 +359,7 @@ const ResumeGuide = () => {
     setSearchError('');
 
     try {
-      const response = await axiosInstance.get("/company/search", {
+      const response = await axiosInstance.get('/company/search', {
         params: {
           keyword: value,
         },
@@ -381,7 +381,7 @@ const ResumeGuide = () => {
     const { companyName, companyNo, questions } = record; // companyNo 추가
     const itemList = questions.split('||');
     userInputForm.setFieldsValue({ companyName });
-    setCompanyNo(companyNo);  // companyNo 설정
+    setCompanyNo(companyNo); // companyNo 설정
     setQuestionList(
       itemList.map((item, index) => ({
         value: item,
@@ -407,7 +407,7 @@ const ResumeGuide = () => {
     setOccupationSearchError('');
 
     try {
-      const response = await axiosInstance.get("/occupation/search", {
+      const response = await axiosInstance.get('/occupation/search', {
         params: {
           keyword: value,
         },
@@ -427,7 +427,7 @@ const ResumeGuide = () => {
   const handleOccupationRowClick = (record) => {
     const { occupationName, occupationNo } = record; // occupationNo 추가
     userInputForm.setFieldsValue({ occupationName });
-    setOccupationNo(occupationNo);  // occupationNo 설정
+    setOccupationNo(occupationNo); // occupationNo 설정
     closeOccupationSearchModal();
     console.log(occupationNo);
   };
