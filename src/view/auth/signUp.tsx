@@ -24,7 +24,6 @@ import { CommonFooter } from '@/components/commonFooter';
 const SignUp = () => {
   let [submitForm] = useForm();
   const navigate = useNavigate();
-  const [userAge, setUserAge] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState(-1);
   const [emailSend, setEmailSend] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -39,10 +38,7 @@ const SignUp = () => {
   const onSubmitForm = async ({
     email,
     password,
-    gender,
-    userBirthDate,
     username,
-    age,
     company,
     wish,
     occupation,
@@ -56,9 +52,6 @@ const SignUp = () => {
         timer: 2000,
       });
     } else {
-      let birthDate = `${userBirthDate.get('year')}-${
-        userBirthDate.get('month') + 1
-      }-${userBirthDate.get('date')}`;
       let role = 'user';
       let name = 'user';
       try {
@@ -70,11 +63,8 @@ const SignUp = () => {
             company,
             occupation,
             username,
-            birthDate,
             role,
             name,
-            gender,
-            age,
             wish,
             status,
           },
@@ -169,8 +159,6 @@ const SignUp = () => {
                     form={submitForm}
                     onFinish={onSubmitForm}
                     layout="vertical"
-                    initialValues={{ gender: '성별을 선택해 주세요' }}
-                    fields={[{ name: ['age'], value: userAge }]}
                   >
                     <Form.Item
                       label={<b>이메일</b>}
