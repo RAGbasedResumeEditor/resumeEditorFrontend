@@ -57,8 +57,8 @@ export const CommonFooter = () => {
           justifyContent: 'space-between',
         }}
       >
-        <span>1:1문의: info@reditor.me</span>
-        <span>제휴문의: info@reditor.me</span>
+        <span>1:1문의: reditor.information@gmail.com</span>
+        <span>제휴문의: reditor.information@gmail.com</span>
       </div>
       <div
         style={{
