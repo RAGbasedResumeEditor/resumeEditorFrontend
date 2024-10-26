@@ -128,7 +128,9 @@ const ResumeList = () => {
               >
                 <span>{resume.createdDate.slice(0, 10)}</span>
                 <span>
-                  <EyeOutlined /> {resume.readCount}
+                  <StarOutlined />{' '}
+                  {resume.rating ? resume.rating.toFixed(1) : 'N/A'} (
+                  {resume.ratingCount})
                 </span>
               </div>
               <div
