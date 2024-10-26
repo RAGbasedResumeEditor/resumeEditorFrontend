@@ -326,7 +326,8 @@ const ResumeList = () => {
                     </div>
                     <div className="view-count">
                       <EyeOutlined /> {resume.readCount} <StarOutlined />{' '}
-                      {resume.rating.toFixed(1)} ({resume.ratingCount})
+                      {resume.rating ? resume.rating.toFixed(1) : 'N/A'} (
+                      {resume.ratingCount})
                     </div>
                   </div>
                 </div>
